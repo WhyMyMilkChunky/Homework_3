@@ -5,10 +5,8 @@
 #include <vector>
 #include <algorithm>
 #include "enemies.h"
+#include "tiles.h"
 
-constexpr int SCREEN_SIZE = 800;
-constexpr int TILE_SIZE = 40;
-constexpr int TILE_COUNT = SCREEN_SIZE / TILE_SIZE;
 
 constexpr float BULLET_RADIUS = 15.0f;
 constexpr float ENEMY_RADIUS = 25.0f;
@@ -20,11 +18,6 @@ enum TileType : int
     WAYPOINT,
     COUNT
 };
-struct Cell
-{
-    int row;
-    int col;
-};
 
 struct Turret {
     Vector2 position;
@@ -32,12 +25,6 @@ struct Turret {
     int damage;
     float firingRate;
 };
-Vector2 TileCenter(Cell cell)
-{
-    Vector2 pixel{ cell.col * TILE_SIZE, cell.row * TILE_SIZE };    // Top-left
-    pixel = pixel + TILE_SIZE * 0.5f;   // Center
-    return pixel;
-}
 
 constexpr std::array<Cell, 4> DIRECTIONS{ Cell{ -1, 0 }, Cell{ 1, 0 }, Cell{ 0, -1 }, Cell{ 0, 1 } };
 
@@ -141,12 +128,14 @@ int main()
     };
     
     // Automatic approach:
-    std::vector<Cell> waypoints = FloodFill({ 0, 12 }, tiles, WAYPOINT);
+    std::vector<Cell> waypoints;
+    waypoints = FloodFill({ 0, 12 }, tiles, WAYPOINT);
     int curr = 0;
     int next = curr + 1;
-    Vector2 enemyPosition = TileCenter(waypoints[curr]);
+    Vector2 enemySpawnPosition = TileCenter(waypoints[curr]);
     float enemySpeed = 250.0f;
     bool atEnd = false;
+    
     std::vector<Enemy> enemies;
     std::vector<Bullet> bullets;
     float bulletSpeed = 500.0f;
@@ -165,30 +154,13 @@ int main()
         // Spawn new enemies at intervals
         if (enemies.size() < numberOfEnemies && spawnTimer >= spawnInterval) {
             
-            Enemy newEnemy = {enemyPosition, {0, 0}, 100.0f, 100 };
+            Enemy newEnemy = {enemySpawnPosition, {0, 0}, 100.0f, 100 };
             enemies.push_back(newEnemy);
             spawnTimer = 0.0f;
         }
 
         // Update all enemies
-        for (Enemy& enemy : enemies) {
-            // Set up current and next waypoints
-            int nextWaypoint = enemy.currentWaypoint + 1;
-            Vector2 A = TileCenter(waypoints[enemy.currentWaypoint]); // Current waypoint
-            Vector2 B = TileCenter(waypoints[nextWaypoint]); // Next wypoint
-
-            // Move enemy towards the next waypoint
-            enemy.direction = Normalize(B - A);
-            enemy.position = enemy.position + enemy.direction * enemy.speed * dt;
-            
-            //if enemy reached the next waypoint
-            if (CheckCollisionPointCircle(B, enemy.position, 10.0f)) {
-                //switch to the next one
-                enemy.position = B;  // Snap
-                enemy.currentWaypoint = nextWaypoint;         // Move to next waypoint
-                nextWaypoint = (enemy.currentWaypoint + 1) % waypoints.size();
-            }
-        }
+        UpdateEnemies(enemies,waypoints, dt);
 
         // Draw tiles, bullets, etc.
         BeginDrawing();
