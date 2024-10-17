@@ -7,6 +7,7 @@ struct Enemy {
     Vector2 direction;
     float speed;
     int health;
+    int currentWaypoint;
 };
 
 //init enemies

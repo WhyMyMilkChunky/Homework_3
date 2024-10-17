@@ -173,19 +173,20 @@ int main()
         // Update all enemies
         for (Enemy& enemy : enemies) {
             // Set up current and next waypoints
-            Vector2 A = TileCenter(waypoints[curr]); // Current waypoint
-            Vector2 B = TileCenter(waypoints[next]); // Next wypoint
+            int nextWaypoint = enemy.currentWaypoint + 1;
+            Vector2 A = TileCenter(waypoints[enemy.currentWaypoint]); // Current waypoint
+            Vector2 B = TileCenter(waypoints[nextWaypoint]); // Next wypoint
 
             // Move enemy towards the next waypoint
             enemy.direction = Normalize(B - A);
             enemy.position = enemy.position + enemy.direction * enemy.speed * dt;
-
+            
             //if enemy reached the next waypoint
             if (CheckCollisionPointCircle(B, enemy.position, 10.0f)) {
                 //switch to the next one
                 enemy.position = B;  // Snap
-                curr = next;         // Move to next waypoint
-                next = (curr + 1) % waypoints.size();
+                enemy.currentWaypoint = nextWaypoint;         // Move to next waypoint
+                nextWaypoint = (enemy.currentWaypoint + 1) % waypoints.size();
             }
         }
 
