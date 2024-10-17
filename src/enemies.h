@@ -2,7 +2,7 @@
 #include "raylib.h"
 #include <vector>
 
-struct Cell;  // Forward declaration to avoid cyclic dependency
+struct Cell;
 
 struct Enemy {
     Vector2 position;

@@ -1,6 +1,6 @@
 #include "enemies.h"
 #include "raylib.h"
-#include "Math.h"   // Assuming TileCenter and other math functions are defined here
+#include "Math.h"
 #include <vector>
 #include "tiles.h"
 

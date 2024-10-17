@@ -160,14 +160,14 @@ int main()
         }
 
         // Update all enemies
-        UpdateEnemies(enemies,waypoints, dt);
+        UpdateEnemies(enemies, waypoints, dt);
 
         // Draw tiles, bullets, etc.
         BeginDrawing();
         ClearBackground(RAYWHITE);
         for (int row = 0; row < TILE_COUNT; row++) {
             for (int col = 0; col < TILE_COUNT; col++) {
-                DrawTile(row, col, tiles[row][col]);
+                DrawTile(row, col, static_cast<TileType>(tiles[row][col]));
             }
         }
 
