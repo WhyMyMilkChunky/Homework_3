@@ -11,9 +11,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\enemies.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\enemies.h" />
     <ClInclude Include="src\Math.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

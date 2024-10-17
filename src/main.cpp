@@ -4,6 +4,7 @@
 #include <array>
 #include <vector>
 #include <algorithm>
+#include "enemies.h"
 
 constexpr int SCREEN_SIZE = 800;
 constexpr int TILE_SIZE = 40;
@@ -24,13 +25,6 @@ struct Cell
     int row;
     int col;
 };
-struct Enemy {
-    Vector2 position;
-    Vector2 direction;
-    float speed;
-    int health;
-};
-
 
 struct Turret {
     Vector2 position;
