@@ -4,8 +4,8 @@
 #include <vector>
 
 struct TileInfo {
-    Rectangle source;  // Source rectangle in the texture
-    TileType type;     // Type of the tile
+    Rectangle source;
+    TileType type;
 };
 
 TileInfo tileInfo[COUNT] = {
@@ -15,7 +15,7 @@ TileInfo tileInfo[COUNT] = {
     { { 0, 16, 16, 16}, TURRET }
 };
 
-// Draw a tile by specifying the tile type
+//tile by specifying the tile type
 void DrawTile(int row, int col, TileType tileType, Texture2D tex)
 {
     TileInfo info = tileInfo[tileType];
