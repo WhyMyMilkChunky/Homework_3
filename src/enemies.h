@@ -8,7 +8,7 @@ struct Enemy {
     Vector2 position;
     Vector2 direction;
     float speed;
-    int health;
+    int health = 100;
     int currentWaypoint;
 };
 void UpdateEnemies(std::vector<Enemy>& enemies, const std::vector<Cell>& waypoints, float dt);

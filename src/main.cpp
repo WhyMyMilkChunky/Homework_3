@@ -62,6 +62,41 @@ std::vector<Cell> FloodFill(Cell start, int tiles[TILE_COUNT][TILE_COUNT], TileT
 
     return result;
 }
+void UpdateBullets(std::vector<Bullet>& bullets, std::vector<Enemy>& enemies, float dt) {
+    // Iterate through bullets
+    for (auto& bullet : bullets) {
+        if (!bullet.enabled) continue;
+
+        // Update bullet position
+        bullet.pos.x += bullet.dir.x * BULLET_SPEED * dt;
+        bullet.pos.y += bullet.dir.y * BULLET_SPEED * dt;
+
+        // Check for collisions with enemies
+        for (auto& enemy : enemies) {
+            if (CheckCollisionPointCircle(bullet.pos, enemy.position, ENEMY_RADIUS)) {
+                // Subtract health from the enemy
+                enemy.health -= 25;
+
+                // Disable bullet after hit
+                bullet.enabled = false;
+
+                // Check if the enemy's health has reached zero
+                if (enemy.health <= 0) {
+                    enemy.health = 0; // Ensure it doesn't go below zero
+                }
+
+                // Break after hitting an enemy
+                break;
+            }
+        }
+    }
+
+    // Remove disabled bullets
+    bullets.erase(
+        std::remove_if(bullets.begin(), bullets.end(), [](const Bullet& b) { return !b.enabled; }),
+        bullets.end()
+    );
+}
 int main()
 {
     const int numberOfEnemies = 10;
@@ -140,14 +175,8 @@ int main()
         //update all enemies
         UpdateEnemies(enemies, waypoints, dt);
         UpdateTurrets(turrets, bullets, enemies, dt);
-        for (Bullet& bullet : bullets) {
-            if (bullet.enabled) {
-                bullet.pos.x += bullet.dir.x * BULLET_SPEED * dt;
-                bullet.pos.y += bullet.dir.y * BULLET_SPEED * dt;
-            }
-        }
+        UpdateBullets(bullets, enemies, dt);
 
-       
         BeginDrawing();
         ClearBackground(RAYWHITE);
 
