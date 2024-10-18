@@ -2,24 +2,30 @@
 #include "raylib.h"
 #include "Math.h"
 #include <vector>
-#include <cassert>
 
-// Define the colors for each tile type
-Color tileColors[COUNT]{ LIME, BEIGE, SKYBLUE };
+struct TileInfo {
+    Rectangle source;  // Source rectangle in the texture
+    TileType type;     // Type of the tile
+};
 
-// Draw a tile by specifying the color directly
-void DrawTile(int row, int col, Color color)
-{
-    DrawRectangle(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, color);
-}
+TileInfo tileInfo[COUNT] = {
+    { { 0, 0, 16, 16 }, GRASS },
+    { { 16, 0, 16, 16 }, DIRT },
+    { { 16, 16, 16, 16 }, WAYPOINT },
+    { { 0, 16, 16, 16}, TURRET }
+};
 
 // Draw a tile by specifying the tile type
-void DrawTile(int row, int col, TileType tileType)
+void DrawTile(int row, int col, TileType tileType, Texture2D tex)
 {
-    assert(tileType >= 0 && tileType < COUNT);
-    DrawTile(row, col, tileColors[tileType]);
-}
+    TileInfo info = tileInfo[tileType];
 
+    //destination rec
+    Rectangle destRect = {static_cast<float>(col * TILE_SIZE),static_cast<float>(row * TILE_SIZE),TILE_SIZE, TILE_SIZE};
+    //source rec
+    Rectangle sourceRect = info.source;
+    DrawTexturePro(tex, sourceRect, destRect, Vector2{ 0, 0 }, 0.0f, WHITE);
+}
 
 Vector2 TileCenter(Cell cell) {
     Vector2 pixel{ cell.col * TILE_SIZE, cell.row * TILE_SIZE };    // Top-left

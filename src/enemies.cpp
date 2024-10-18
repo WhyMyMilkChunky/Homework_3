@@ -6,14 +6,6 @@
 
 constexpr float ENEMY_RADIUS = 25.0f;
 
-std::vector<Enemy> SpawnEnemies(const Vector2& initialPosition, int numberOfEnemies) {
-    std::vector<Enemy> enemies;
-    for (int i = 0; i < numberOfEnemies; ++i) {
-        enemies.push_back({ initialPosition, {0, 0}, 100.0f, 100, 0 });
-    }
-    return enemies;
-}
-
 void UpdateEnemies(std::vector<Enemy>& enemies, const std::vector<Cell>& waypoints, float dt) {
     for (Enemy& enemy : enemies) {
         int curr = enemy.currentWaypoint;

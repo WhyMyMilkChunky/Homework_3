@@ -14,11 +14,17 @@
     <ClCompile Include="src\enemies.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\tiles.cpp" />
+    <ClCompile Include="src\Turret.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\enemies.h" />
     <ClInclude Include="src\Math.h" />
     <ClInclude Include="src\tiles.h" />
+    <ClInclude Include="src\Turret.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\Textures\Tilemap1.png" />
+    <Image Include="Assets\Textures\Turret_Top.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

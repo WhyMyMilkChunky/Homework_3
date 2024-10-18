@@ -11,7 +11,5 @@ struct Enemy {
     int health;
     int currentWaypoint;
 };
-
-std::vector<Enemy> SpawnEnemies(const Vector2& initialPosition, int numberOfEnemies);
 void UpdateEnemies(std::vector<Enemy>& enemies, const std::vector<Cell>& waypoints, float dt);
 void DrawEnemies(const std::vector<Enemy>& enemies);

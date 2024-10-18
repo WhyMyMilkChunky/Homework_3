@@ -24,6 +24,9 @@
     <ClCompile Include="src\tiles.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Turret.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Math.h">
@@ -35,5 +38,16 @@
     <ClInclude Include="src\tiles.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Turret.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\Textures\Tilemap1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Turret_Top.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

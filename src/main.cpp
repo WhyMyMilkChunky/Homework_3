@@ -6,43 +6,18 @@
 #include <algorithm>
 #include "enemies.h"
 #include "tiles.h"
+#include "Turret.h"
 
 
-constexpr float BULLET_RADIUS = 15.0f;
+constexpr float BULLET_RADIUS = 6.0f;
 constexpr float ENEMY_RADIUS = 25.0f;
-
-enum TileType : int
-{
-    GRASS,
-    DIRT,
-    WAYPOINT,
-    COUNT
-};
-
-struct Turret {
-    Vector2 position;
-    float range;
-    int damage;
-    float firingRate;
-};
+constexpr float BULLET_SPEED = 600.0f;
 
 constexpr std::array<Cell, 4> DIRECTIONS{ Cell{ -1, 0 }, Cell{ 1, 0 }, Cell{ 0, -1 }, Cell{ 0, 1 } };
 
 inline bool InBounds(Cell cell, int rows = TILE_COUNT, int cols = TILE_COUNT)
 {
     return cell.col >= 0 && cell.col < cols && cell.row >= 0 && cell.row < rows;
-}
-
-void DrawTile(int row, int col, Color color)
-{
-    DrawRectangle(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, color);
-}
-
-void DrawTile(int row, int col, int tileType)
-{
-    assert(tileType >= 0 && tileType < COUNT);
-    Color colours[COUNT]{ LIME, BEIGE, SKYBLUE };
-    DrawTile(row, col, colours[tileType]);
 }
 
 // Returns a collection of adjacent cells that match the search value.
@@ -87,15 +62,6 @@ std::vector<Cell> FloodFill(Cell start, int tiles[TILE_COUNT][TILE_COUNT], TileT
 
     return result;
 }
-
-struct Bullet
-{
-    Vector2 position{};
-    Vector2 direction{};
-    float time = 0.0f;
-    bool enabled = true;
-};
-
 int main()
 {
     const int numberOfEnemies = 10;
@@ -114,13 +80,13 @@ int main()
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 }, // 6
         { 0, 0, 0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0 }, // 7
         { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 8
-        { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 9
+        { 0, 0, 0, 1, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 9
         { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 10
         { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 11
         { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 12
         { 0, 0, 0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0 }, // 13
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, // 14
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, // 15
+        { 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, // 15
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, // 16
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0 }, // 17
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 18
@@ -133,16 +99,29 @@ int main()
     int curr = 0;
     int next = curr + 1;
     Vector2 enemySpawnPosition = TileCenter(waypoints[curr]);
-    float enemySpeed = 250.0f;
+    float enemySpeed = 69.0f;
     bool atEnd = false;
     
     std::vector<Enemy> enemies;
     std::vector<Bullet> bullets;
+    std::vector<Turret> turrets;
+   
+    for (int row = 0; row < TILE_COUNT; row++) {
+        for (int col = 0; col < TILE_COUNT; col++) {
+            if (tiles[row][col] == TURRET) {
+                //create and place turret at the center of the tile
+                Vector2 turretPosition = TileCenter({ row, col });
+                turrets.push_back(CreateTurret(turretPosition));
+            }
+        }
+    }
     float bulletSpeed = 500.0f;
     float shootCurrent = 0.0f;
     float shootTotal = 0.25f;
 
     InitWindow(800, 800, "Game");
+    Texture2D tileTex = LoadTexture("Assets/Textures/tilemap1.png");
+    Texture2D turretTex = LoadTexture("Assets/Textures/Turret_Top.png");
     SetTargetFPS(60);
 
     while (!WindowShouldClose())
@@ -151,39 +130,49 @@ int main()
         spawnTimer += dt;
         Vector2 mouse = GetMousePosition();
 
-        // Spawn new enemies at intervals
+        //spawns
         if (enemies.size() < numberOfEnemies && spawnTimer >= spawnInterval) {
             
-            Enemy newEnemy = {enemySpawnPosition, {0, 0}, 100.0f, 100 };
+            Enemy newEnemy = {enemySpawnPosition, {0, 0}, enemySpeed};
             enemies.push_back(newEnemy);
             spawnTimer = 0.0f;
         }
 
-        // Update all enemies
+        //update all enemies
         UpdateEnemies(enemies, waypoints, dt);
-
-        // Draw tiles, bullets, etc.
-        BeginDrawing();
-        ClearBackground(RAYWHITE);
-        for (int row = 0; row < TILE_COUNT; row++) {
-            for (int col = 0; col < TILE_COUNT; col++) {
-                DrawTile(row, col, static_cast<TileType>(tiles[row][col]));
+        UpdateTurrets(turrets, bullets, enemies, dt);
+        for (Bullet& bullet : bullets) {
+            if (bullet.enabled) {
+                bullet.pos.x += bullet.dir.x * BULLET_SPEED * dt;
+                bullet.pos.y += bullet.dir.y * BULLET_SPEED * dt;
             }
         }
 
-        // Draw enemies
-        for (Enemy& enemy : enemies) {
-            DrawCircleV(enemy.position, ENEMY_RADIUS, RED);
+       
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+
+        //tiles
+        for (int row = 0; row < TILE_COUNT; row++) {
+            for (int col = 0; col < TILE_COUNT; col++) {
+                DrawTile(row, col, static_cast<TileType>(tiles[row][col]), tileTex);
+            }
         }
-        
-        // Draw bullets
         for (const Bullet& bullet : bullets) {
-            DrawCircleV(bullet.position, BULLET_RADIUS, RED);
+            DrawCircleV(bullet.pos, BULLET_RADIUS, RED);
         }
+        //draw enemies
+        DrawEnemies(enemies);
+        
+        //draw bullets
+        for (const Bullet& bullet : bullets) {
+            DrawCircleV(bullet.pos, BULLET_RADIUS, RED);
+        }
+        DrawTurrets(turrets, turretTex);
 
         EndDrawing();
     }
-
+    UnloadTexture(tileTex);
     CloseWindow();
     return 0;
 }
