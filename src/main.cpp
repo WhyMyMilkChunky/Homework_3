@@ -156,6 +156,7 @@ int main()
     InitWindow(800, 800, "Game");
     Texture2D tileTex = LoadTexture("Assets/Textures/tilemap1.png");
     Texture2D turretTex = LoadTexture("Assets/Textures/Turret_Top.png");
+    Texture2D enemyTex = LoadTexture("Assets/Textures/Chomp.png");
     SetTargetFPS(60);
 
     while (!WindowShouldClose())
@@ -190,7 +191,7 @@ int main()
             DrawCircleV(bullet.pos, BULLET_RADIUS, RED);
         }
         //draw enemies
-        DrawEnemies(enemies);
+        DrawEnemies(enemies,enemyTex);
         
         //draw bullets
         for (const Bullet& bullet : bullets) {

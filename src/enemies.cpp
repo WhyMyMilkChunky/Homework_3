@@ -39,8 +39,16 @@ void UpdateEnemies(std::vector<Enemy>& enemies, const std::vector<Cell>& waypoin
 }
 
 
-void DrawEnemies(const std::vector<Enemy>& enemies) {
+void DrawEnemies(const std::vector<Enemy>& enemies, Texture2D enemyTexture) {
     for (const Enemy& enemy : enemies) {
-        DrawCircleV(enemy.position, ENEMY_RADIUS, RED);
+       // DrawCircleV(enemy.position, ENEMY_RADIUS, RED);
+        DrawTexturePro(
+            enemyTexture,
+            { 0, 0, (float)enemyTexture.width, (float)enemyTexture.height },
+            { enemy.position.x, enemy.position.y, ENEMY_RADIUS*2, ENEMY_RADIUS*2 },
+            { ENEMY_RADIUS,ENEMY_RADIUS },
+            0,
+            WHITE
+        );
     }
 }

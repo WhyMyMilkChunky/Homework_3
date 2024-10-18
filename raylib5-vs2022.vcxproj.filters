@@ -49,5 +49,8 @@
     <Image Include="Assets\Textures\Turret_Top.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Assets\Textures\Chomp.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

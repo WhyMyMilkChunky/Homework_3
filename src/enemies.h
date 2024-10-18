@@ -12,4 +12,4 @@ struct Enemy {
     int currentWaypoint;
 };
 void UpdateEnemies(std::vector<Enemy>& enemies, const std::vector<Cell>& waypoints, float dt);
-void DrawEnemies(const std::vector<Enemy>& enemies);
+void DrawEnemies(const std::vector<Enemy>& enemies,Texture2D enemyTexture);
