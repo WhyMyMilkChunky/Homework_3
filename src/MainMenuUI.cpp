@@ -2,14 +2,14 @@
 #include "GameStates.h"	
 
 
-void CreateButton(int yOffset, const char* buttonText, Color buttonColour, int newState, std::vector<Button>& Buttons)
+void CreateButton(float yOffset, const char* buttonText, Color buttonColour, int newState, std::vector<Button>& Buttons)
 {
 	//the button is CENTERED 
-	int posX = (SCREEN_SIZEX / 2 - MENU_BUTTON_WIDTH/2);
+	float posX = (SCREEN_SIZEX / 2 - MENU_BUTTON_WIDTH/2);
 	//i cant think anymore idk what this even means
-	int posY = yOffset;
+	float posY = yOffset;
 	//make background button
-	Rectangle buttonRec = { posX,20+yOffset,MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT };
+	Rectangle buttonRec = { posX,20.0F+yOffset,MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT };
 
 
 	Button newButton;

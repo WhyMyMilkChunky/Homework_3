@@ -42,7 +42,7 @@ void UpdateTurrets(std::vector<Turret>& turrets, std::vector<Bullet>& bullets, s
                 bullet.dir = Normalize(direction);
                 bullet.enabled = true;
                 bullets.push_back(bullet);
-                particleSys.CreateMuzzleFlash(turret.pos, bullet.dir, 13, 2, 3, YELLOW, 0.2, 150, 0.2);
+                particleSys.CreateMuzzleFlash(turret.pos, bullet.dir, 13, 2, 3, YELLOW, 0.2F, 150, 0.2F);
 
                 turret.cooldown = turret.firingRate;//take a deep breath before firing again
             }

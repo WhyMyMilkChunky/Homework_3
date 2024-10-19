@@ -35,7 +35,7 @@ void UpdateBegin(Button& button, Game& game) {
     // Add mouse-out vs mouse-over colour
     Color buttonColorOut = button.colour;
     //Color buttonColorIn = { button.colour .r /2, button.colour .b /2, button.colour .g /2, button.colour .a};
-    Color buttonColorIn = ColorBrightness(button.colour,-0.4);
+    Color buttonColorIn = ColorBrightness(button.colour,-0.4f);
     bool mouseOver = CheckCollisionPointRec(GetMousePosition(), button.rec);
     button.buttonColour = mouseOver ? buttonColorIn : buttonColorOut;
     if (mouseOver && IsMouseButtonReleased(MOUSE_LEFT_BUTTON))
@@ -46,8 +46,8 @@ void UpdateBegin(ToolbarButton& button,Pen pencil)
     // Add mouse-out vs mouse-over colour
     Color buttonColorOut = button.colour;
     //Color buttonColorIn = { button.colour .r /2, button.colour .b /2, button.colour .g /2, button.colour .a};
-    Color buttonColorIn = ColorBrightness(button.colour, -0.4);
-    Color buttonColorSelected = ColorBrightness(button.colour, -0.7);
+    Color buttonColorIn = ColorBrightness(button.colour, -0.4f);
+    Color buttonColorSelected = ColorBrightness(button.colour, -0.7f);
     bool mouseOver = CheckCollisionPointRec(GetMousePosition(), button.rec);
     button.buttonColour = mouseOver ? buttonColorIn : buttonColorOut;
 

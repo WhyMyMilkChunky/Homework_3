@@ -7,7 +7,7 @@ struct Turret {
     Vector2 pos;
     float range;
     int damage;
-    float firingRate = 0.4;
+    float firingRate = 0.4F;
     float cooldown;
     float rotationAngle;
 };
