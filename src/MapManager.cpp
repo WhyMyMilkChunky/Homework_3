@@ -1,30 +1,42 @@
 #include "MapManager.h"
 #include <iostream>
+#include <fstream>
+#include <string>
+
 
 MapManager::MapManager(int tileCount) : tileCount(tileCount) {}
 
-void MapManager::SaveMap(const std::string& filePath, int map[TILE_COUNT][TILE_COUNT]) {
+//generate le file name (game takes place in france)
+std::string MapManager::GenerateFileName(int level) {
+    return "map" + std::to_string(level) + ".bin";
+}
+
+//save 
+void MapManager::SaveMap(int level, int map[TILE_COUNT][TILE_COUNT]) {
+    std::string filePath = GenerateFileName(level);
     std::ofstream file(filePath, std::ios::out | std::ios::binary);
     if (file.is_open()) {
         file.write(reinterpret_cast<char*>(map), sizeof(int) * tileCount * tileCount);
         file.close();
-        std::cout << "Map saved successfully to " << filePath << std::endl;
+        std::cout << "map saved successfully to " << filePath << std::endl;
     }
     else {
-        std::cerr << "Failed to open file for writing: " << filePath << std::endl;
+        std::cerr << "UH OH failed to open file for writing: " << filePath << std::endl;
     }
 }
 
-bool MapManager::LoadMap(const std::string& filePath, int map[TILE_COUNT][TILE_COUNT]) {
+//load
+bool MapManager::LoadMap(int level, int map[TILE_COUNT][TILE_COUNT]) {
+    std::string filePath = GenerateFileName(level);
     std::ifstream file(filePath, std::ios::in | std::ios::binary);
     if (file.is_open()) {
         file.read(reinterpret_cast<char*>(map), sizeof(int) * tileCount * tileCount);
         file.close();
-        std::cout << "Map loaded successfully from " << filePath << std::endl;
+        std::cout << "map loaded successfully from " << filePath << std::endl;
         return true;
     }
     else {
-        std::cerr << "Failed to open file for reading: " << filePath << std::endl;
+        std::cerr << "OH SHIT!! failed to open file for reading: " << filePath << std::endl;
         return false;
     }
 }

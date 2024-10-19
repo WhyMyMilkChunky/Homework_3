@@ -14,6 +14,7 @@
 #include "MapMaker.h"
 #include "MainMenuUI.h"
 #include "MapManager.h"
+#include <string>
 
 
 //long main scripts give me anxiety so i refractored some of the code to different places
@@ -25,7 +26,32 @@ extern Rectangle playButton;
 extern ParticleSystem particleSys;
 constexpr std::array<Cell, 4> DIRECTIONS{ Cell{ -1, 0 }, Cell{ 1, 0 }, Cell{ 0, -1 }, Cell{ 0, 1 } };
 Pen pencil = { GRASS };
+void SaveCurrentLevel(int currentLevel) {
+    std::ofstream file("current_level.txt");
+    if (file.is_open()) {
+        file << currentLevel;
+        file.close();
+        std::cout << "Current level saved as " << currentLevel << std::endl;
+    }
+    else {
+        std::cerr << "Failed to open current_level.txt for writing" << std::endl;
+    }
+}
 
+// Function to load the current level from a file
+int LoadCurrentLevel() {
+    std::ifstream file("current_level.txt");
+    int level = 1; // Default to level 1 if file doesn't exist
+    if (file.is_open()) {
+        file >> level;
+        file.close();
+        std::cout << "Loaded current level: " << level << std::endl;
+    }
+    else {
+        std::cerr << "Failed to open current_level.txt, defaulting to level 1" << std::endl;
+    }
+    return level;
+}
 inline bool InBounds(Cell cell, int rows = TILE_COUNT, int cols = TILE_COUNT)
 {
     return cell.col >= 0 && cell.col < cols && cell.row >= 0 && cell.row < rows;
@@ -218,6 +244,7 @@ int main()
 
     while (!WindowShouldClose())
     {
+        std::string levelText = "Current Level: " + std::to_string(currentLevel);
         if (IsKeyReleased(KEY_SPACE))
         {
             game.gameState = MAINMENU;
@@ -230,20 +257,23 @@ int main()
             break;
 
         case MAPMAKER:
-            if (IsKeyPressed(KEY_S)) 
-            {
-                mapManager.SaveMap("map.bin", tiles);
-                std::cout << "Map saved successfully!" << std::endl;
+            if (IsKeyPressed(KEY_S)) {
+                mapManager.SaveMap(currentLevel, tiles);
             }
-            if (IsKeyPressed(KEY_L))
-            {
-                if (mapManager.LoadMap("map.bin", tiles)) {
-                    std::cout << "Map loaded successfully!" << std::endl;
-                }
-                else {
-                    std::cout << "Failed to load map." << std::endl;
-                }
+            if (IsKeyPressed(KEY_L)) {
+                mapManager.LoadMap(currentLevel, tiles);
             }
+            if (IsKeyPressed(KEY_PAGE_UP)) {
+                currentLevel++;
+                mapManager.LoadMap(currentLevel, tiles);
+            }
+            if (IsKeyPressed(KEY_PAGE_DOWN) && currentLevel > 1) {
+                currentLevel--;
+                mapManager.LoadMap(currentLevel, tiles);
+            }
+            
+            DrawText(levelText.c_str(), 10, 10, 20, BLACK);
+
             UpdateBegin(toolbarButtons,pencil);
             if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
             ChangeTile(SelectCell(), pencil.tileType, tiles);
@@ -281,6 +311,7 @@ int main()
 
                 DrawToolBar(button);
             }
+            DrawText(levelText.c_str(), 10, 10, 20, BLACK);
                     break;
         case PLAYGAME :
             ClearBackground(RAYWHITE);
