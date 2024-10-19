@@ -149,14 +149,18 @@ int main()
         size = file.tellg();
         memblock = new char[size];
         file.seekg(0, std::ios::beg);
-        file.read(reinterpret_cast<char*>(map), sizeof(map));
+        file.read(memblock, size);
         file.close();
-        // Print out the first three rows as a test
+        
+
+        int copy[TILE_COUNT][TILE_COUNT];
+        std::memcpy(copy, memblock, sizeof(copy));
         for (int i = 0; i < TILE_COUNT; ++i) {
             for (int j = 0; j < TILE_COUNT; ++j) {
-                tiles[i][j] = map[i][j];
+                tiles[i][j] = copy[i][j];
             }
         }
+        delete[] memblock;
         printf("the entire file content is in memory");
    
       //  //make a copy of last file using memory
