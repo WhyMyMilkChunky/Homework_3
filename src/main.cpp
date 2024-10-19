@@ -302,6 +302,8 @@ int main()
                 }
             }
             UpdateBegin(toolbarButtons,pencil);
+            if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+            ChangeTile(SelectCell(), pencil.tileType, tiles);
             break;
         case PLAYGAME:
             float dt = GetFrameTime();
