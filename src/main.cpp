@@ -8,6 +8,8 @@
 #include "tiles.h"
 #include "Turret.h"
 #include "GameStates.h"
+#include "ParticleSystem.h"
+
 
 //long main scripts give me anxiety so i refractored some of the code to different places
 constexpr float BULLET_RADIUS = 6.0f;
@@ -15,6 +17,7 @@ constexpr float ENEMY_RADIUS = 25.0f;
 constexpr float BULLET_SPEED = 600.0f;
 extern Rectangle playButton;
 //extern const char* BUTTON_TEXT; // maybe dont need?
+extern ParticleSystem particleSys;
 constexpr std::array<Cell, 4> DIRECTIONS{ Cell{ -1, 0 }, Cell{ 1, 0 }, Cell{ 0, -1 }, Cell{ 0, 1 } };
 
 inline bool InBounds(Cell cell, int rows = TILE_COUNT, int cols = TILE_COUNT)
@@ -204,6 +207,7 @@ int main()
         for (const Bullet& bullet : bullets) {
             DrawCircleV(bullet.pos, BULLET_RADIUS, RED);
         }
+        particleSys.Draw();
         DrawTurrets(turrets, turretTex);
 
         switch (game.gameState)

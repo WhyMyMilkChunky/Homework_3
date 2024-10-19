@@ -2,8 +2,9 @@
 #include "raylib.h"
 #include "Math.h"
 #include <cmath>
+#include "ParticleSystem.h"
 
-
+ParticleSystem particleSys;
 Turret CreateTurret(Vector2 position) {
     return { position, 200.0f, 25, 1.0f, 0.0f, 0.0f };
 }
@@ -42,6 +43,7 @@ void UpdateTurrets(std::vector<Turret>& turrets, std::vector<Bullet>& bullets, s
                 bullet.dir = Normalize(direction);
                 bullet.enabled = true;
                 bullets.push_back(bullet);
+                particleSys.CreateExplosion(turret.pos, 100, 1, 3, YELLOW, 1, 30);
 
                 turret.cooldown = turret.firingRate;//take a deep breath before firing again
             }
