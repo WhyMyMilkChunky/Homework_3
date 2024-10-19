@@ -11,6 +11,7 @@
 #include "ParticleSystem.h"
 #include <iostream>
 #include <fstream>
+#include "MapMaker.h"
 
 
 //long main scripts give me anxiety so i refractored some of the code to different places
@@ -21,6 +22,7 @@ extern Rectangle playButton;
 //extern const char* BUTTON_TEXT; // maybe dont need?
 extern ParticleSystem particleSys;
 constexpr std::array<Cell, 4> DIRECTIONS{ Cell{ -1, 0 }, Cell{ 1, 0 }, Cell{ 0, -1 }, Cell{ 0, 1 } };
+Pen pencil = { GRASS };
 
 inline bool InBounds(Cell cell, int rows = TILE_COUNT, int cols = TILE_COUNT)
 {
@@ -105,6 +107,7 @@ void UpdateBullets(std::vector<Bullet>& bullets, std::vector<Enemy>& enemies, fl
         bullets.end()
     );
 }
+
 int main()
 {
     int map[TILE_COUNT][TILE_COUNT]
@@ -244,11 +247,14 @@ int main()
     std::vector<Enemy> enemies;
     std::vector<Bullet> bullets;
     std::vector<Turret> turrets;
+    std::vector<ToolbarButton> toolbarButtons;
     std::vector<Button> Buttons;
-
+    
 
     CreateButton(100, "Play", PURPLE, PLAYGAME,Buttons);
     CreateButton(250, "Map Maker", DARKPURPLE, MAPMAKER,Buttons);
+
+    CreateToolbarButton(100, GRASS, "Grass",toolbarButtons);
    
     for (int row = 0; row < TILE_COUNT; row++) 
     {
@@ -266,7 +272,7 @@ int main()
     float shootCurrent = 0.0f;
     float shootTotal = 0.25f;
 
-    InitWindow(SCREEN_SIZEC, SCREEN_SIZEC, "Game");
+    InitWindow(SCREEN_SIZEX, SCREEN_SIZEY, "Game");
     Texture2D tileTex = LoadTexture("Assets/Textures/tilemap1.png");
     Texture2D turretTex = LoadTexture("Assets/Textures/Turret_Top.png");
     Texture2D enemyTex = LoadTexture("Assets/Textures/Chomp.png");
@@ -274,6 +280,10 @@ int main()
 
     while (!WindowShouldClose())
     {
+        if (IsKeyReleased(KEY_SPACE))
+        {
+            game.gameState = MAINMENU;
+        }
         switch (game.gameState) {
         case MAINMENU:
             for (Button& button : Buttons) {
@@ -282,7 +292,7 @@ int main()
             break;
 
         case MAPMAKER:
-
+            
             break;
         case PLAYGAME:
             float dt = GetFrameTime();
@@ -312,7 +322,8 @@ int main()
                 break;
 
         case MAPMAKER:
-
+            DrawBackground(tiles, tileTex);
+            DrawToolBar();
                     break;
         case PLAYGAME :
             ClearBackground(RAYWHITE);
@@ -332,8 +343,11 @@ int main()
             for (const Bullet& bullet : bullets) {
                 DrawCircleV(bullet.pos, BULLET_RADIUS, RED);
             }
+            //add particles to turrets
             particleSys.Draw();
+            //draw turrets
             DrawTurrets(turrets, turretTex);
+            //this wil draw the in game playstates button
             switch (game.gameState)
             {
             case BEGINNEW:

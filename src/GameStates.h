@@ -1,6 +1,7 @@
 #pragma once
 #include "raylib.h"
 #include"MainMenuUI.h"
+#include "MapMaker.h"
 //before first round is BEGINNEW, as in begin new game
 //during round is play, button disabled
 //BEGINROUND is state inbetween rounds
@@ -44,6 +45,7 @@ void DrawPlay(Game& game);
 void DrawEnd(Game& game);
 //void UpdateBegin(Game& game);
 void UpdateBegin(Button& button, Game& game);
+void UpdateBegin(ToolbarButton& buttons);
 
 //mainmenu
 void DrawMainMenu(std::vector<Button>& Buttons);

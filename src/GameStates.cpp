@@ -30,17 +30,7 @@ void DrawPlay(Game& game)
 void DrawEnd(Game& game)
 {
     DrawRectangleRec(game.playButton, Color{ 50, 50, 50, 255 });
-}
-
-//void UpdateBegin(Game& game) {
-//    // Add mouse-out vs mouse-over colour
-//    Color buttonColorOut = ORANGE;
-//    Color buttonColorIn = Color{ 205, 111, 0, 255 };
-//    bool mouseOver = CheckCollisionPointRec(GetMousePosition(), game.playButton);
-//    game.playButtonColour = mouseOver ? buttonColorIn : buttonColorOut;
-//  //  if (mouseOver && IsMouseButtonReleased(MOUSE_LEFT_BUTTON))
-//   //     ++game.gameState %= 3;
-//}       
+}     
 void UpdateBegin(Button& button, Game& game) {
     // Add mouse-out vs mouse-over colour
     Color buttonColorOut = button.colour;
@@ -51,7 +41,26 @@ void UpdateBegin(Button& button, Game& game) {
     if (mouseOver && IsMouseButtonReleased(MOUSE_LEFT_BUTTON))
         game.gameState = button.stateChange;
 }
+void UpdateBegin(ToolbarButton& button,Pen pencil)
+{
+    // Add mouse-out vs mouse-over colour
+    Color buttonColorOut = button.colour;
+    //Color buttonColorIn = { button.colour .r /2, button.colour .b /2, button.colour .g /2, button.colour .a};
+    Color buttonColorIn = ColorBrightness(button.colour, -0.4);
+    Color buttonColorSelected = ColorBrightness(button.colour, -0.7);
+    bool mouseOver = CheckCollisionPointRec(GetMousePosition(), button.rec);
+    button.buttonColour = mouseOver ? buttonColorIn : buttonColorOut;
+
+    //if has been selected, make button look selected;
+    if (pencil.tileType == button.tileType)
+        button.buttonColour = buttonColorSelected;
+    //if selected change pencil to type
+    if (mouseOver && IsMouseButtonReleased(MOUSE_LEFT_BUTTON))
+        pencil.tileType = button.tileType;
+}
+//im realizing this is in an odd script as it should be in mainmenuui but like idk 
 //trying to send in buttons
+
 void DrawMainMenu(std::vector<Button>& Buttons)
 {
     ClearBackground(BLACK);

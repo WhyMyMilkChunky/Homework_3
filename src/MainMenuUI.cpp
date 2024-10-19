@@ -5,7 +5,7 @@
 void CreateButton(int yOffset, const char* buttonText, Color buttonColour, int newState, std::vector<Button>& Buttons)
 {
 	//the button is CENTERED 
-	int posX = (SCREEN_SIZEC / 2 - MENU_BUTTON_WIDTH/2);
+	int posX = (SCREEN_SIZEX / 2 - MENU_BUTTON_WIDTH/2);
 	//i cant think anymore idk what this even means
 	int posY = yOffset;
 	//make background button

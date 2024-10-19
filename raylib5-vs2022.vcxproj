@@ -15,6 +15,7 @@
     <ClCompile Include="src\GameStates.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\MainMenuUI.cpp" />
+    <ClCompile Include="src\MapMaker.cpp" />
     <ClCompile Include="src\ParticleSystem.cpp" />
     <ClCompile Include="src\tiles.cpp" />
     <ClCompile Include="src\Turret.cpp" />
@@ -23,6 +24,7 @@
     <ClInclude Include="src\enemies.h" />
     <ClInclude Include="src\GameStates.h" />
     <ClInclude Include="src\MainMenuUI.h" />
+    <ClInclude Include="src\MapMaker.h" />
     <ClInclude Include="src\Math.h" />
     <ClInclude Include="src\ParticleSystem.h" />
     <ClInclude Include="src\tiles.h" />
