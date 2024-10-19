@@ -5,15 +5,17 @@
 
 class MapManager {
 public:
-    // Constructor
+    // t h e   c o n s t r u c t o r     :O
     MapManager(int tileCount);
 
-    // Save the map to a binary file
-    void SaveMap(const std::string& filePath, int map[TILE_COUNT][TILE_COUNT]);
+    
+    void SaveMap(int level, int map[TILE_COUNT][TILE_COUNT]);
 
-    // Load the map from a binary file
-    bool LoadMap(const std::string& filePath, int map[TILE_COUNT][TILE_COUNT]);
+    bool LoadMap(int level, int map[TILE_COUNT][TILE_COUNT]);
 
 private:
     int tileCount;
+
+    // generate filenames
+    std::string GenerateFileName(int level);
 };
