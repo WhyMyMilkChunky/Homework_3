@@ -7,6 +7,7 @@
 #include "enemies.h"
 #include "tiles.h"
 #include "Turret.h"
+#include "GameStates.h"
 
 //long main scripts give me anxiety so i refractored some of the code to different places
 constexpr float BULLET_RADIUS = 6.0f;
@@ -100,6 +101,7 @@ void UpdateBullets(std::vector<Bullet>& bullets, std::vector<Enemy>& enemies, fl
 }
 int main()
 {
+    Game game = { playButton , ORANGE, BEGIN };
     const int numberOfEnemies = 10;
     float spawnInterval = 1.0f;
     float spawnTimer = 0.0f;
@@ -200,6 +202,20 @@ int main()
         }
         DrawTurrets(turrets, turretTex);
 
+        switch (game.gameState)
+        {
+        case BEGIN:
+            DrawBegin(game);
+            break;
+
+        case PLAY:
+            DrawPlay(game);
+            break;
+
+        case END:
+            DrawEnd(game);
+            break;
+        }
         EndDrawing();
     }
     UnloadTexture(tileTex);

@@ -12,12 +12,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\enemies.cpp" />
+    <ClCompile Include="src\GameStates.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\tiles.cpp" />
     <ClCompile Include="src\Turret.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\enemies.h" />
+    <ClInclude Include="src\GameStates.h" />
     <ClInclude Include="src\Math.h" />
     <ClInclude Include="src\tiles.h" />
     <ClInclude Include="src\Turret.h" />
