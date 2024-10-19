@@ -11,7 +11,6 @@ void CreateButton(int yOffset, const char* buttonText, Color buttonColour, int n
 	//make background button
 	Rectangle buttonRec = { posX,20.0f+yOffset,MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT };
 
-
 	Button newButton;
 	newButton.buttonColour = buttonColour;
 	newButton.colour = buttonColour;
