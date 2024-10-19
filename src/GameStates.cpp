@@ -1,9 +1,10 @@
 #include "GameStates.h"
+#include "MainMenuUI.h"
 
 
 
 //Change gamestate
-GameStates currentGameState;
+PlayStates currentPlayState;
 Rectangle playButton = {
     BUTTON_POSX,
     BUTTON_POSY,
@@ -11,32 +12,50 @@ Rectangle playButton = {
     BUTTON_HEIGHT
 };
 
-void ChangeGamemode(GameStates newGameState)
+void ChangeGamemode(PlayStates newPlayState)
 {
-	currentGameState = newGameState;
+	currentPlayState = newPlayState;
 }
 
 void DrawBegin(Game& game)
 {
-    DrawRectangleRec(game.button, game.buttonColour);
+    DrawRectangleRec(game.playButton, game.playButtonColour);
 }
 
 void DrawPlay(Game& game)
 {
-    DrawRectangleRec(game.button, Color{ 70, 128, 158, 255 });
+    DrawRectangleRec(game.playButton, Color{ 70, 128, 158, 255 });
 }
 
 void DrawEnd(Game& game)
 {
-    DrawRectangleRec(game.button, Color{ 50, 50, 50, 255 });
+    DrawRectangleRec(game.playButton, Color{ 50, 50, 50, 255 });
 }
 
-void UpdateBegin(Game& game) {
+//void UpdateBegin(Game& game) {
+//    // Add mouse-out vs mouse-over colour
+//    Color buttonColorOut = ORANGE;
+//    Color buttonColorIn = Color{ 205, 111, 0, 255 };
+//    bool mouseOver = CheckCollisionPointRec(GetMousePosition(), game.playButton);
+//    game.playButtonColour = mouseOver ? buttonColorIn : buttonColorOut;
+//  //  if (mouseOver && IsMouseButtonReleased(MOUSE_LEFT_BUTTON))
+//   //     ++game.gameState %= 3;
+//}       
+void UpdateBegin(Button& button, Game& game) {
     // Add mouse-out vs mouse-over colour
-    Color buttonColorOut = ORANGE;
-    Color buttonColorIn = Color{ 205, 111, 0, 255 };
-    bool mouseOver = CheckCollisionPointRec(GetMousePosition(), game.button);
-    game.buttonColour = mouseOver ? buttonColorIn : buttonColorOut;
-  //  if (mouseOver && IsMouseButtonReleased(MOUSE_LEFT_BUTTON))
-   //     ++game.gameState %= 3;
+    Color buttonColorOut = button.colour;
+    //Color buttonColorIn = { button.colour .r /2, button.colour .b /2, button.colour .g /2, button.colour .a};
+    Color buttonColorIn = ColorBrightness(button.colour,-0.4);
+    bool mouseOver = CheckCollisionPointRec(GetMousePosition(), button.rec);
+    button.buttonColour = mouseOver ? buttonColorIn : buttonColorOut;
+    if (mouseOver && IsMouseButtonReleased(MOUSE_LEFT_BUTTON))
+        game.gameState = button.stateChange;
+}
+//trying to send in buttons
+void DrawMainMenu(std::vector<Button>& Buttons)
+{
+    ClearBackground(BLACK);
+    for (Button& button : Buttons) {
+        DrawButton(button);
+    }
 }
