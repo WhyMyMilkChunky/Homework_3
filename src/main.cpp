@@ -13,6 +13,7 @@
 #include <fstream>
 #include "MapMaker.h"
 #include "MainMenuUI.h"
+#include "MapManager.h"
 
 
 //long main scripts give me anxiety so i refractored some of the code to different places
@@ -108,9 +109,11 @@ void UpdateBullets(std::vector<Bullet>& bullets, std::vector<Enemy>& enemies, fl
         bullets.end()
     );
 }
-
+MapManager mapManager(TILE_COUNT);
 int main()
 {
+
+    
     int map[TILE_COUNT][TILE_COUNT]
     {
         //col:0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19    row:
@@ -306,7 +309,20 @@ int main()
             break;
 
         case MAPMAKER:
-            
+            if (IsKeyPressed(KEY_S)) 
+            {
+                mapManager.SaveMap("map.bin", tiles);
+                std::cout << "Map saved successfully!" << std::endl;
+            }
+            if (IsKeyPressed(KEY_L))
+            {
+                if (mapManager.LoadMap("map2.bin", tiles)) {
+                    std::cout << "Map loaded successfully!" << std::endl;
+                }
+                else {
+                    std::cout << "Failed to load map." << std::endl;
+                }
+            }
             break;
         case PLAYGAME:
             float dt = GetFrameTime();

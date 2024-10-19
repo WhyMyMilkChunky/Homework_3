@@ -16,6 +16,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\MainMenuUI.cpp" />
     <ClCompile Include="src\MapMaker.cpp" />
+    <ClCompile Include="src\MapManager.cpp" />
     <ClCompile Include="src\ParticleSystem.cpp" />
     <ClCompile Include="src\tiles.cpp" />
     <ClCompile Include="src\Turret.cpp" />
@@ -25,6 +26,7 @@
     <ClInclude Include="src\GameStates.h" />
     <ClInclude Include="src\MainMenuUI.h" />
     <ClInclude Include="src\MapMaker.h" />
+    <ClInclude Include="src\MapManager.h" />
     <ClInclude Include="src\Math.h" />
     <ClInclude Include="src\ParticleSystem.h" />
     <ClInclude Include="src\tiles.h" />
@@ -34,6 +36,10 @@
     <Image Include="Assets\Textures\Chomp.png" />
     <Image Include="Assets\Textures\Tilemap1.png" />
     <Image Include="Assets\Textures\Turret_Top.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="map.bin" />
+    <None Include="map2.bin" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

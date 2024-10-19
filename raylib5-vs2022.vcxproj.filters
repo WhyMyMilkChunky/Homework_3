@@ -39,6 +39,9 @@
     <ClCompile Include="src\MapMaker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\MapManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Math.h">
@@ -65,6 +68,9 @@
     <ClInclude Include="src\MapMaker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\MapManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\Textures\Tilemap1.png">
@@ -76,5 +82,13 @@
     <Image Include="Assets\Textures\Chomp.png">
       <Filter>Resource Files</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="map.bin">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="map2.bin">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
