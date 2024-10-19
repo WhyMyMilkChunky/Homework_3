@@ -254,6 +254,7 @@ int main()
         UpdateEnemies(enemies, waypoints, dt);
         UpdateTurrets(turrets, bullets, enemies, dt);
         UpdateBullets(bullets, enemies, dt);
+        particleSys.Update(dt);
 
         BeginDrawing();
         ClearBackground(RAYWHITE);
@@ -276,6 +277,7 @@ int main()
         }
         particleSys.Draw();
         DrawTurrets(turrets, turretTex);
+        
 
         switch (game.gameState)
         {

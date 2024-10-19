@@ -23,6 +23,7 @@ public:
     ParticleSystem();
     void CreateExplosion(Vector2 position, int particleCount, float lifetime, float size, Color color, float opacity, float velocity);
     void CreateSmoke(Vector2 position, int particleCount, float lifetime, float size, Color color, float opacity, float velocity);
+    void CreateMuzzleFlash(Vector2 position, Vector2 direction, int particleCount, float lifetime, float size, Color color, float opacity, float speed, float spread);
     void Update(float deltaTime);
     void Draw();  
 

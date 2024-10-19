@@ -6,6 +6,27 @@ ParticleSystem::ParticleSystem() {
     
 }
 
+void ParticleSystem::CreateMuzzleFlash(Vector2 position, Vector2 direction, int particleCount, float lifetime, float size, Color color, float opacity, float speed, float spread) {
+    for (int i = 0; i < particleCount; i++) {
+        Particle p;
+        //spread
+        float angle = atan2(direction.y, direction.x);
+        float randomSpread = (static_cast<float>(rand()) / static_cast<float>(RAND_MAX) - 0.5f) * spread;
+
+        p.velocity.x = cos(angle + randomSpread) * speed;
+        p.velocity.y = sin(angle + randomSpread) * speed;
+
+        
+        p.position = position;
+        p.lifeTime = lifetime;
+        p.size = size;
+        p.color = color;
+        p.opacity = opacity;
+
+        particles.push_back(p);
+    }
+}
+
 //woohoo particles hahahahahahahah
 void ParticleSystem::CreateExplosion(Vector2 position, int particleCount, float lifetime, float size, Color color, float opacity, float speed) {
     for (int i = 0; i < particleCount; i++) {

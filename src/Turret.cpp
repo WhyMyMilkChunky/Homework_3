@@ -8,7 +8,6 @@ ParticleSystem particleSys;
 Turret CreateTurret(Vector2 position) {
     return { position, 200.0f, 25, 1.0f, 0.0f, 0.0f };
 }
-
 void DrawTurrets(std::vector<Turret>& turrets, Texture2D turretTexture) {
     for (const Turret& turret : turrets) {
         
@@ -43,7 +42,7 @@ void UpdateTurrets(std::vector<Turret>& turrets, std::vector<Bullet>& bullets, s
                 bullet.dir = Normalize(direction);
                 bullet.enabled = true;
                 bullets.push_back(bullet);
-                particleSys.CreateExplosion(turret.pos, 100, 1, 3, YELLOW, 1, 30);
+                particleSys.CreateMuzzleFlash(turret.pos, bullet.dir, 13, 2, 3, YELLOW, 0.2, 150, 0.2);
 
                 turret.cooldown = turret.firingRate;//take a deep breath before firing again
             }
