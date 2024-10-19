@@ -14,6 +14,7 @@ enum TileType : int
     DIRT,
     WAYPOINT,
     TURRET,
+    START,
     COUNT
     
 };

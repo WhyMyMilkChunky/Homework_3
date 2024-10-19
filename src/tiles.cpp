@@ -12,7 +12,8 @@ TileInfo tileInfo[COUNT] = {
     { { 0, 0, 16, 16 }, GRASS },
     { { 16, 0, 16, 16 }, DIRT },
     { { 16, 16, 16, 16 }, WAYPOINT },
-    { { 0, 16, 16, 16}, TURRET }
+    { { 0, 16, 16, 16}, TURRET },
+    {{16, 16, 16, 16},START}
 };
 
 //tile by specifying the tile type

@@ -30,7 +30,22 @@ inline bool InBounds(Cell cell, int rows = TILE_COUNT, int cols = TILE_COUNT)
 {
     return cell.col >= 0 && cell.col < cols && cell.row >= 0 && cell.row < rows;
 }
+Cell StartCell(int tiles[TILE_COUNT][TILE_COUNT]) {
+    //search for startCell
+    Cell startCell;
+    for (int row = 0; row < TILE_COUNT; row++)
+    {
+        for (int col = 0; col < TILE_COUNT; col++)
+        {
+            // We don't want to search zero-tiles, so add them to closed!
+            if (tiles[row][col] == START) {
+                startCell = { row,col };
+                return startCell;
+            }
 
+        }
+    }
+}
 // Returns a collection of adjacent cells that match the search value.
 std::vector<Cell> FloodFill(Cell start, int tiles[TILE_COUNT][TILE_COUNT], TileType searchValue)
 {
@@ -49,11 +64,13 @@ std::vector<Cell> FloodFill(Cell start, int tiles[TILE_COUNT][TILE_COUNT], TileT
 
     // Add the starting cell to the exploration queue & search till there's nothing left!
     open.push_back(start);
+    result.push_back(start);
     while (!open.empty())
     {
         // Remove from queue and prevent revisiting
         Cell cell = open.back();
         open.pop_back();
+        closed[cell.row][cell.col] = true;
         closed[cell.row][cell.col] = true;
 
         // Add to result if explored cell has the desired value
@@ -110,131 +127,67 @@ void UpdateBullets(std::vector<Bullet>& bullets, std::vector<Enemy>& enemies, fl
     );
 }
 MapManager mapManager(TILE_COUNT);
-int main()
-{
 
-    
-    int map[TILE_COUNT][TILE_COUNT]
+float spawnInterval = 1.0f;
+float spawnTimer = 0.0f;
+
+// Automatic approach:
+std::vector<Cell> waypoints; 
+int curr = 0;
+int next = curr + 1;
+Vector2 enemySpawnPosition;
+float enemySpeed = 69.0f;
+bool atEnd = false;
+
+void InitalizeGameStuff(std::vector<Turret> turrets, int tiles[TILE_COUNT][TILE_COUNT]) {
+     spawnInterval = 1.0f;
+     spawnTimer = 0.0f;
+
+    // Automatic approach:
+     waypoints = FloodFill(StartCell(tiles), tiles, WAYPOINT);
+
+    curr = 0;
+    next= curr + 1;
+     enemySpawnPosition = TileCenter(waypoints[curr]);
+     enemySpeed = 69.0f;
+     atEnd = false;
+    //this will need to be redone because we need to place the turrets during the game
+    for (int row = 0; row < TILE_COUNT; row++)
     {
-        //col:0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19    row:
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0 }, // 0
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 }, // 1
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 }, // 2
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 }, // 3
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 }, // 4
-            { 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0 }, // 5
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 }, // 6
-            { 0, 0, 0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0 }, // 7
-            { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 8
-            { 0, 0, 0, 1, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 9
-            { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 10
-            { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 11
-            { 0, 3, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 12
-            { 0, 0, 0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0 }, // 13
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, // 14
-            { 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, // 15
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, // 16
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0 }, // 17
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 18
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }  // 19
-    };
-    int map2[TILE_COUNT][TILE_COUNT]
-    {
-        //col:0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19    row:
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0 }, // 0
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 }, // 1
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 2 }, // 2
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 2 }, // 3
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 2 }, // 4
-            { 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 2 }, // 5
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 }, // 6
-            { 0, 0, 0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0 }, // 7
-            { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 8
-            { 0, 0, 0, 1, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 9
-            { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 10
-            { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 11
-            { 0, 3, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 12
-            { 0, 0, 0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0 }, // 13
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, // 14
-            { 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, // 15
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, // 16
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0 }, // 17
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 18
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }  // 19
-    };
-
-    int tiles[TILE_COUNT][TILE_COUNT]{
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 2 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 2 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 2 },
-        { 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 2 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 1, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 3, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
-
-    };
-
-    //create a binary file 
-    std::ofstream myMapFile;
-    myMapFile.open("map.bin", std::ios::out | std::ios::app | std::ios::binary);
-    myMapFile.write(reinterpret_cast<char*>(map), sizeof(map));
-    myMapFile.close();
-
-    //getting the binary file and copying the memory to tiles
-    std::ofstream myMap2File;
-    myMap2File.open("map2.bin", std::ios::out | std::ios::app | std::ios::binary);
-    myMap2File.write(reinterpret_cast<char*>(map2), sizeof(map2));
-    myMap2File.close();
-    //init size and memory
-    std::streampos size;
-    char* memblock;
-    //create
-    std::ifstream outFile("map2.bin", std::ios::in | std::ios::binary | std::ios::ate);
-    if (outFile.is_open())
-    {
-        size = outFile.tellg();
-        memblock = new char[size];
-        outFile.seekg(0, std::ios::beg);
-        outFile.read(memblock, size);
-        outFile.close();
-        printf("the entire file content is in memory");
-
-        std::memcpy(tiles, memblock, sizeof(tiles));
-        
-        delete[] memblock;
+        for (int col = 0; col < TILE_COUNT; col++)
+        {
+            if (tiles[row][col] == TURRET)
+            {
+                //create and place turret at the center of the tile
+                Vector2 turretPosition = TileCenter({ row, col });
+                turrets.push_back(CreateTurret(turretPosition));
+            }
+        }
     }
-    else
-        printf("not copy memory");
+    if (mapManager.LoadMap("map.bin", tiles)) {
+        std::cout << "Map loaded successfully!" << std::endl;
+    }
+    else {
+        std::cout << "Failed to load map." << std::endl;
+    }
+};
 
+int main()
+{   
+    int tiles[TILE_COUNT][TILE_COUNT];
+    if (mapManager.LoadMap("map.bin", tiles)) {
+        std::cout << "Map loaded successfully!" << std::endl;
+    }
+    else {
+        std::cout << "Failed to load map." << std::endl;
+    }
     Game game;
     game.playButton = playButton;
     game.playButtonColour = ORANGE;
     game.gameState = MAINMENU;
     game.playState = BEGINNEW;
     const int numberOfEnemies = 10;
-    float spawnInterval = 1.0f;
-    float spawnTimer = 0.0f;
-
-    // Automatic approach:
-    std::vector<Cell> waypoints = FloodFill({ 0, 12 }, tiles, WAYPOINT);
-    int curr = 0;
-    int next = curr + 1;
-    Vector2 enemySpawnPosition = TileCenter(waypoints[curr]);
-    float enemySpeed = 69.0f;
-    bool atEnd = false;
+    
     
     std::vector<Enemy> enemies;
     std::vector<Bullet> bullets;
@@ -250,23 +203,13 @@ int main()
     CreateToolbarButton(TOOLBAR_BUTTON_WIDTH, DIRT, "Dirt",toolbarButtons);
     CreateToolbarButton(TOOLBAR_BUTTON_WIDTH*2, WAYPOINT, "Waypoint",toolbarButtons);
     CreateToolbarButton(TOOLBAR_BUTTON_WIDTH*3, TURRET, "Turret",toolbarButtons);
+    CreateToolbarButton(TOOLBAR_BUTTON_WIDTH*4, START, "StartCell",toolbarButtons);
    
-    for (int row = 0; row < TILE_COUNT; row++) 
-    {
-        for (int col = 0; col < TILE_COUNT; col++) 
-        {
-            if (tiles[row][col] == TURRET) 
-            {
-                //create and place turret at the center of the tile
-                Vector2 turretPosition = TileCenter({ row, col });
-                turrets.push_back(CreateTurret(turretPosition));
-            }
-        }
-    }
+
     float bulletSpeed = 500.0f;
     float shootCurrent = 0.0f;
     float shootTotal = 0.25f;
-
+    InitalizeGameStuff(turrets, tiles);
     InitWindow(SCREEN_SIZEX, SCREEN_SIZEY, "Game");
     Texture2D tileTex = LoadTexture("Assets/Textures/tilemap1.png");
     Texture2D turretTex = LoadTexture("Assets/Textures/Turret_Top.png");
@@ -294,7 +237,7 @@ int main()
             }
             if (IsKeyPressed(KEY_L))
             {
-                if (mapManager.LoadMap("map2.bin", tiles)) {
+                if (mapManager.LoadMap("map.bin", tiles)) {
                     std::cout << "Map loaded successfully!" << std::endl;
                 }
                 else {
