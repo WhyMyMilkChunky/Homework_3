@@ -22,9 +22,9 @@ struct Bullet
 
 Turret CreateTurret(Vector2 position);
 
-void DrawTurrets(const std::vector<Turret>& turrets, Texture2D turretTexture);
+void DrawTurrets(std::vector<Turret>& turrets, Texture2D turretTexture);
 
-void UpdateTurrets(std::vector<Turret>& turrets, std::vector<Bullet>& bullets, const std::vector<Enemy>& enemies, float dt);
+void UpdateTurrets(std::vector<Turret>& turrets, std::vector<Bullet>& bullets, std::vector<Enemy>& enemies, float dt);
 
-Enemy* FindNearestEnemy(const Turret& turret, const std::vector<Enemy>& enemies);
+Enemy* FindNearestEnemy(Turret& turret, std::vector<Enemy>& enemies);
 

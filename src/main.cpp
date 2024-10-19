@@ -8,7 +8,7 @@
 #include "tiles.h"
 #include "Turret.h"
 
-
+//long main scripts give me anxiety so i refractored some of the code to different places
 constexpr float BULLET_RADIUS = 6.0f;
 constexpr float ENEMY_RADIUS = 25.0f;
 constexpr float BULLET_SPEED = 600.0f;
@@ -62,6 +62,8 @@ std::vector<Cell> FloodFill(Cell start, int tiles[TILE_COUNT][TILE_COUNT], TileT
 
     return result;
 }
+
+//yeah i didnt want to but the bullet logic here in main but ran outta time
 void UpdateBullets(std::vector<Bullet>& bullets, std::vector<Enemy>& enemies, float dt) {
     
     for (auto& bullet : bullets) {
@@ -71,18 +73,17 @@ void UpdateBullets(std::vector<Bullet>& bullets, std::vector<Enemy>& enemies, fl
         bullet.pos.x += bullet.dir.x * BULLET_SPEED * dt;
         bullet.pos.y += bullet.dir.y * BULLET_SPEED * dt;
 
-        //collisions with enemies
+        //collision w enemies
         for (auto& enemy : enemies) {
             if (CheckCollisionPointCircle(bullet.pos, enemy.position, ENEMY_RADIUS)) {
-                // Subtract health from the enemy
                 enemy.health -= 25;
 
                 //kill bullet after hit
                 bullet.enabled = false;
 
-                //is enemy dead
                 if (enemy.health <= 0) {
                     enemy.health = 0;
+                    //things below 0 give me anxiety
                 }
 
                 
@@ -91,7 +92,7 @@ void UpdateBullets(std::vector<Bullet>& bullets, std::vector<Enemy>& enemies, fl
         }
     }
 
-    // Remove disabled bullets
+    //remove disabled bullets
     bullets.erase(
         std::remove_if(bullets.begin(), bullets.end(), [](const Bullet& b) { return !b.enabled; }),
         bullets.end()

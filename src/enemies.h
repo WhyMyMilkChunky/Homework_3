@@ -1,7 +1,7 @@
 #pragma once
 #include "raylib.h"
 #include <vector>
-
+//i love raylib
 struct Cell;
 
 struct Enemy {
