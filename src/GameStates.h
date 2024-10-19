@@ -45,7 +45,7 @@ void DrawPlay(Game& game);
 void DrawEnd(Game& game);
 //void UpdateBegin(Game& game);
 void UpdateBegin(Button& button, Game& game);
-void UpdateBegin(ToolbarButton& buttons);
+void UpdateBegin(std::vector<ToolbarButton>& button, Pen& pencil);
 
 //mainmenu
 void DrawMainMenu(std::vector<Button>& Buttons);

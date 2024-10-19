@@ -22,7 +22,7 @@ struct Pen {
 };
 void CreateToolbarButton(float yOffset, TileType tileType, const char* buttonText, std::vector<ToolbarButton>& toolbarButtons);
 //add ui toolbar that will hold the tile types to select
-void DrawToolBar();
+void DrawToolBar(ToolbarButton button);
 
 //draw background and tiles
 //if we wanted to just switch out the tile map, input different tiletex

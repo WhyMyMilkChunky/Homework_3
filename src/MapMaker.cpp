@@ -13,9 +13,11 @@ void CreateToolbarButton(float yOffset,TileType tileType,const char* buttonText,
 
     toolbarButtons.push_back(newButton);
 }
-void DrawToolBar()
+void DrawToolBar(ToolbarButton button)
 {
+    //for every button in toolbarbuttons, draw that
     
+    DrawRectangleRec(button.rec, button.buttonColour);
     //technically not always grass, maybe change to feild or something
    // DrawRectangleRec(Grass.rec, Grass.buttonColour);
    // DrawRectangleRec(Dirt.rec, Dirt.buttonColour);

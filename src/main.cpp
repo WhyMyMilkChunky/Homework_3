@@ -228,31 +228,6 @@ int main()
     float spawnInterval = 1.0f;
     float spawnTimer = 0.0f;
 
-    int tilesOLD[TILE_COUNT][TILE_COUNT]
-    {
-    //col:0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19    row:
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0 }, // 0
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 }, // 1
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 }, // 2
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 }, // 3
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 }, // 4
-        { 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 }, // 5
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 }, // 6
-        { 0, 0, 0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0 }, // 7
-        { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 8
-        { 0, 0, 0, 1, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 9
-        { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 10
-        { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 11
-        { 0, 3, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 12
-        { 0, 0, 0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0 }, // 13
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, // 14
-        { 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, // 15
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, // 16
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0 }, // 17
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 18
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }  // 19
-    };
-
     // Automatic approach:
     std::vector<Cell> waypoints = FloodFill({ 0, 12 }, tiles, WAYPOINT);
     int curr = 0;
@@ -271,7 +246,10 @@ int main()
     CreateButton(100, "Play", PURPLE, PLAYGAME,Buttons);
     CreateButton(250, "Map Maker", DARKPURPLE, MAPMAKER,Buttons);
 
-    CreateToolbarButton(100, GRASS, "Grass",toolbarButtons);
+    CreateToolbarButton(0, GRASS, "Grass",toolbarButtons);
+    CreateToolbarButton(TOOLBAR_BUTTON_WIDTH, DIRT, "Dirt",toolbarButtons);
+    CreateToolbarButton(TOOLBAR_BUTTON_WIDTH*2, WAYPOINT, "Waypoint",toolbarButtons);
+    CreateToolbarButton(TOOLBAR_BUTTON_WIDTH*3, TURRET, "Turret",toolbarButtons);
    
     for (int row = 0; row < TILE_COUNT; row++) 
     {
@@ -323,6 +301,7 @@ int main()
                     std::cout << "Failed to load map." << std::endl;
                 }
             }
+            UpdateBegin(toolbarButtons,pencil);
             break;
         case PLAYGAME:
             float dt = GetFrameTime();
@@ -353,7 +332,10 @@ int main()
 
         case MAPMAKER:
             DrawBackground(tiles, tileTex);
-            DrawToolBar();
+            for (ToolbarButton& button : toolbarButtons) {
+
+                DrawToolBar(button);
+            }
                     break;
         case PLAYGAME :
             ClearBackground(RAYWHITE);
