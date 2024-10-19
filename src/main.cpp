@@ -13,7 +13,8 @@
 constexpr float BULLET_RADIUS = 6.0f;
 constexpr float ENEMY_RADIUS = 25.0f;
 constexpr float BULLET_SPEED = 600.0f;
-
+extern Rectangle playButton;
+//extern const char* BUTTON_TEXT; // maybe dont need?
 constexpr std::array<Cell, 4> DIRECTIONS{ Cell{ -1, 0 }, Cell{ 1, 0 }, Cell{ 0, -1 }, Cell{ 0, 1 } };
 
 inline bool InBounds(Cell cell, int rows = TILE_COUNT, int cols = TILE_COUNT)
@@ -101,7 +102,10 @@ void UpdateBullets(std::vector<Bullet>& bullets, std::vector<Enemy>& enemies, fl
 }
 int main()
 {
-    Game game = { playButton , ORANGE, BEGIN };
+    Game game;
+    game.button = playButton;
+    game.buttonColour = ORANGE;
+    game.gameState = BEGINNEW;
     const int numberOfEnemies = 10;
     float spawnInterval = 1.0f;
     float spawnTimer = 0.0f;
@@ -204,7 +208,7 @@ int main()
 
         switch (game.gameState)
         {
-        case BEGIN:
+        case BEGINNEW:
             DrawBegin(game);
             break;
 
@@ -212,7 +216,7 @@ int main()
             DrawPlay(game);
             break;
 
-        case END:
+        case GAMEOVER:
             DrawEnd(game);
             break;
         }

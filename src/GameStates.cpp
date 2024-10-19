@@ -4,7 +4,12 @@
 
 //Change gamestate
 GameStates currentGameState;
-
+Rectangle playButton = {
+    BUTTON_POSX,
+    BUTTON_POSY,
+    BUTTON_WIDTH,
+    BUTTON_HEIGHT
+};
 
 void ChangeGamemode(GameStates newGameState)
 {
@@ -32,6 +37,6 @@ void UpdateBegin(Game& game) {
     Color buttonColorIn = Color{ 205, 111, 0, 255 };
     bool mouseOver = CheckCollisionPointRec(GetMousePosition(), game.button);
     game.buttonColour = mouseOver ? buttonColorIn : buttonColorOut;
-    if (mouseOver && IsMouseButtonReleased(MOUSE_LEFT_BUTTON))
-        ++game.gameState %= 3;
+  //  if (mouseOver && IsMouseButtonReleased(MOUSE_LEFT_BUTTON))
+   //     ++game.gameState %= 3;
 }
