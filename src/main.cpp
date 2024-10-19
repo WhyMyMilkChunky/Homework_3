@@ -9,6 +9,8 @@
 #include "Turret.h"
 #include "GameStates.h"
 #include "ParticleSystem.h"
+#include <iostream>
+#include <fstream>
 
 
 //long main scripts give me anxiety so i refractored some of the code to different places
@@ -105,6 +107,71 @@ void UpdateBullets(std::vector<Bullet>& bullets, std::vector<Enemy>& enemies, fl
 }
 int main()
 {
+    int map[TILE_COUNT][TILE_COUNT]
+    {
+        //col:0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19    row:
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0 }, // 0
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 }, // 1
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 }, // 2
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 }, // 3
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 }, // 4
+            { 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0 }, // 5
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 }, // 6
+            { 0, 0, 0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0 }, // 7
+            { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 8
+            { 0, 0, 0, 1, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 9
+            { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 10
+            { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 11
+            { 0, 3, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 12
+            { 0, 0, 0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0 }, // 13
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, // 14
+            { 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, // 15
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 }, // 16
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0 }, // 17
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 18
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }  // 19
+    };
+
+    int tiles[TILE_COUNT][TILE_COUNT];
+
+    //create a binary file 
+    std::ofstream myfile;
+    myfile.open("example.bin", std::ios::out | std::ios::app | std::ios::binary);
+    myfile.write(reinterpret_cast<char*>(map), sizeof(map));
+    myfile.close();
+   
+    //getting the binary file and copying the memory
+    std::streampos size;
+    char* memblock;
+    std::ifstream file("example.bin", std::ios::in | std::ios::binary | std::ios::ate);
+    if (file.is_open())
+    {
+        size = file.tellg();
+        memblock = new char[size];
+        file.seekg(0, std::ios::beg);
+        file.read(reinterpret_cast<char*>(map), sizeof(map));
+        file.close();
+        // Print out the first three rows as a test
+        for (int i = 0; i < TILE_COUNT; ++i) {
+            for (int j = 0; j < TILE_COUNT; ++j) {
+                tiles[i][j] = map[i][j];
+            }
+        }
+        printf("the entire file content is in memory");
+   
+      //  //make a copy of last file using memory
+      //  std::ofstream myCopyFile;
+      //  myCopyFile.open("exampleCopy.bin", std::ios::out | std::ios::app | std::ios::binary);
+      //  if (myCopyFile.is_open()) {
+      //      myCopyFile.write(memblock, size); // Write binary data
+      //      myCopyFile.close();
+      //  }
+      //  else {
+      //      std::cout << "Unable to open file for copying." << std::endl;
+      //  }
+      //  delete[] memblock;
+    }
+
     Game game;
     game.button = playButton;
     game.buttonColour = ORANGE;
@@ -113,7 +180,7 @@ int main()
     float spawnInterval = 1.0f;
     float spawnTimer = 0.0f;
 
-    int tiles[TILE_COUNT][TILE_COUNT]
+    int tilesOLD[TILE_COUNT][TILE_COUNT]
     {
     //col:0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19    row:
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0 }, // 0
@@ -137,7 +204,7 @@ int main()
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // 18
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }  // 19
     };
-    
+
     // Automatic approach:
     std::vector<Cell> waypoints = FloodFill({ 0, 12 }, tiles, WAYPOINT);
     int curr = 0;
