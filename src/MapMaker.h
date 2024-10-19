@@ -4,7 +4,7 @@
 
 constexpr int TOOLBAR_BUTTON_WIDTH = 200;
 constexpr int TOOLBAR_BUTTON_HEIGHT = 100;
-constexpr Color TOOLBAR_COLOR = SKYBLUE;
+constexpr Color TOOLBAR_COLOR = BROWN;
 //toolbar buttons
 struct ToolbarButton {
 	//current colour
