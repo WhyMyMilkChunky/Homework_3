@@ -12,6 +12,7 @@
 #include <iostream>
 #include <fstream>
 #include "MapMaker.h"
+#include "MainMenuUI.h"
 
 
 //long main scripts give me anxiety so i refractored some of the code to different places
@@ -208,17 +209,8 @@ int main()
         outFile.close();
         printf("the entire file content is in memory");
 
-       // int copy[TILE_COUNT][TILE_COUNT];
         std::memcpy(tiles, memblock, sizeof(tiles));
-      //  for (int i = 0; i < TILE_COUNT; ++i)
-       // {
-       //     for (int j = 0; j < TILE_COUNT; ++j)
-       //     {
-       //         tiles[i][j] = copy[i][j];
-       //
-       //     }
-       //
-       // }
+        
         delete[] memblock;
     }
     else
