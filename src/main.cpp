@@ -282,7 +282,7 @@ int main()
 
     while (!WindowShouldClose())
     {
-        particleSys.CreateSnow(1, 10.0f, 1.0f, 50.0f, 10.0f, WHITE, 1.0f, GetScreenWidth(), true);
+        particleSys.CreateSnow(30, 20.0f, 1.0f, 50.0f, 10.0f, WHITE, 2.0f, GetScreenWidth());
         std::string levelText = "Current Level: " + std::to_string(currentLevel);
         if (IsKeyReleased(KEY_SPACE))
         {
