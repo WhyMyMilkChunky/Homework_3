@@ -19,6 +19,7 @@ void UpdateEnemies(std::vector<Enemy>& enemies, const std::vector<Cell>& waypoin
                 currentHealth -= DAMAGE_PER_ENEMY;
                 if (currentHealth <= 0) {
                     currentHealth = 0;
+
                     
                 }
                 return true;

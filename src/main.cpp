@@ -309,6 +309,9 @@ int main()
             UpdateTurrets(turrets, bullets, enemies, dt);
             UpdateBullets(bullets, enemies, dt);
             particleSys.Update(dt);
+            if (currentHealth <= 0) {
+                game.playState = GAMEOVER;
+            }
             break;
         }
 
@@ -364,6 +367,7 @@ int main()
 
             case GAMEOVER:
                 DrawEnd(game);
+                
                 break;
             }
             break;
