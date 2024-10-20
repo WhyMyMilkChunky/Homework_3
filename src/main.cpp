@@ -215,7 +215,7 @@ MapManager mapManager(TILE_COUNT);
 
 float spawnInterval = 1.0f;
 float spawnTimer = 0.0f;
-
+int availableTurrets;
 // Automatic approach:
 std::vector<Cell> waypoints; 
 int curr = 0;
@@ -317,6 +317,7 @@ int main()
 
     int maxTurrets = 4;
     int placedTurrets = 0;
+    
 
     InitalizeGameStuff(turrets, tiles);
     InitWindow(SCREEN_SIZEX, SCREEN_SIZEY, "Game");
@@ -450,6 +451,7 @@ int main()
                     spawnTimer = 0.0f;
                     totalEnemiesSpawned++;
                 }
+
                 break;
 
             case GAMEOVER:
@@ -486,7 +488,7 @@ int main()
             DrawText(levelText.c_str(), 10, 10, 20, BLACK);
                     break;
         case PLAYGAME :
-
+            availableTurrets = maxTurrets - placedTurrets;
             //Make snow
             if (currentWeather == WeatherType::WINTER) {
                 particleSys.CreateSnow(5, Random(1.0f, 5.0f), 2.0f, 50.0f, 90.0f, WHITE, 1.0f, GetScreenWidth(), GetScreenHeight());
@@ -519,6 +521,8 @@ int main()
             DrawTurrets(turrets, turretTex);
             //add particles to turrets
             particleSys.Draw();
+            
+            DrawText(("Turrets Left: " + std::to_string(availableTurrets)).c_str(), 10, 40, 20, BLACK);
             //this will draw the in game playstates button
             DrawHealthBar(currentHealth, maxHealth);
             switch (game.playState)
