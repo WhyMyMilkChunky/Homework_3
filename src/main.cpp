@@ -28,7 +28,18 @@ extern ParticleSystem particleSys;
 constexpr std::array<Cell, 4> DIRECTIONS{ Cell{ -1, 0 }, Cell{ 1, 0 }, Cell{ 0, -1 }, Cell{ 0, 1 } };
 Pen pencil = { GRASS };
 
+WeatherType currentWeather = WeatherType::SUMMER;
+Texture2D summerTileTex;
+Texture2D winterTileTex;
+void LoadWeatherTextures() {
+    summerTileTex = LoadTexture("Assets/Textures/Tilemap1.png");
+    winterTileTex = LoadTexture("Assets/Textures/Tilemap2.png");
+}
 
+void UnloadWeatherTextures() {
+    UnloadTexture(summerTileTex);
+    UnloadTexture(winterTileTex);
+}
 int currentHealth = 100;
 int maxHealth = 100;
 
