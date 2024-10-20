@@ -23,6 +23,7 @@
 constexpr float BULLET_RADIUS = 6.0f;
 constexpr float ENEMY_RADIUS = 25.0f;
 constexpr float BULLET_SPEED = 600.0f;
+
 extern Rectangle playButton;
 
 //extern const char* BUTTON_TEXT; // maybe dont need?
@@ -290,6 +291,7 @@ int main()
     
     LoadAllSounds(audioManager);
 
+    //Creates vectors
     std::vector<Enemy> enemies;
     std::vector<Bullet> bullets;
     std::vector<Turret> turrets;
@@ -302,6 +304,7 @@ int main()
     EnemyType::RUI,
     EnemyType::CONNOR
     };
+    //Make ui buttons
     CreateButton(100, "Play", PURPLE, PLAYGAME,Buttons);
     CreateButton(250, "Map Maker", DARKPURPLE, MAPMAKER,Buttons);
 
@@ -311,8 +314,6 @@ int main()
     CreateToolbarButton(TOOLBAR_BUTTON_WIDTH*3, TURRET, "Turret",toolbarButtons);
     CreateToolbarButton(TOOLBAR_BUTTON_WIDTH*4, START, "StartCell",toolbarButtons);
    
-
-    float bulletSpeed = 500.0f;
     float shootCurrent = 0.0f;
     float shootTotal = 0.25f;
     InitalizeGameStuff(turrets, tiles);
@@ -454,9 +455,11 @@ int main()
                     break;
         case PLAYGAME :
 
+            //Make snow
             if (currentWeather == WeatherType::WINTER) {
                 particleSys.CreateSnow(5, Random(1.0f, 5.0f), 2.0f, 50.0f, 90.0f, WHITE, 1.0f, GetScreenWidth(), GetScreenHeight());
             }
+            
             ClearBackground(BLACK);
             //tiles
             for (int row = 0; row < TILE_COUNT; row++) {
@@ -473,27 +476,23 @@ int main()
                     }
                 }
             }
-            for (const Bullet& bullet : bullets) {
-                DrawCircleV(bullet.pos, BULLET_RADIUS, RED);
-            }
+
             //draw enemies
             DrawEnemies(enemies, enemyTex);
-
-            //draw bullets
+            //Draw bullets
             for (const Bullet& bullet : bullets) {
                 DrawCircleV(bullet.pos, BULLET_RADIUS, RED);
             }
-            //add particles to turrets
-            
             //draw turrets
             DrawTurrets(turrets, turretTex);
+            //add particles to turrets
             particleSys.Draw();
-            //this wil draw the in game playstates button
+            //this will draw the in game playstates button
             DrawHealthBar(currentHealth, maxHealth);
             switch (game.playState)
             {
             case BEGINNEW:
-                //setup before game
+                //updates button for colour hover thing
                 DrawBegin(game);
                 break;
 
@@ -510,8 +509,6 @@ int main()
             DrawGameOver();
             break;
         }
-            
-
         EndDrawing();
     }
     UnloadTexture(tileTex);
