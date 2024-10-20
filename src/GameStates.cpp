@@ -70,4 +70,5 @@ void DrawMainMenu(std::vector<Button>& Buttons)
     for (Button& button : Buttons) {
         DrawButton(button);
     }
+    DisplayInstructions();
 }

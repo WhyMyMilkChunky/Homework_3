@@ -63,3 +63,8 @@ void DrawHealthBar(int currentHealth, int maxHealth)
 	int textPosY = posY + (HEALTH_BAR_HEIGHT / 2) - 10;  // vertically center txt
 	DrawText(healthText.c_str(), textPosX, textPosY, 20, WHITE);
 }
+void DisplayInstructions() {
+	const char* instructions = 
+		"Space to go back to main menu\n\n\nMap Maker: Up page and Down page to\n\n\nswitch between levels\n\n\nS key to save map ";
+	DrawText(instructions, 50, 400, 30, WHITE);
+}
