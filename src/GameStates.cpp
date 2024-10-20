@@ -23,16 +23,6 @@ void DrawBegin(Game& game)
 {
     DrawRectangleRec(game.playButton, game.playButtonColour);
 }
-
-void DrawPlay(Game& game)
-{
-    DrawRectangleRec(game.playButton, Color{ 70, 128, 158, 255 });
-}
-
-void DrawEnd(Game& game)
-{
-    DrawRectangleRec(game.playButton, Color{ 50, 50, 50, 255 });
-}     
 void UpdateBegin(Button& button, Game& game) {
     // Add mouse-out vs mouse-over colour
     Color buttonColorOut = button.colour;

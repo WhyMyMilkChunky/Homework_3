@@ -25,6 +25,7 @@ constexpr float BULLET_SPEED = 600.0f;
 extern Rectangle playButton;
 //extern const char* BUTTON_TEXT; // maybe dont need?
 extern ParticleSystem particleSys;
+extern Button playAgain;
 constexpr std::array<Cell, 4> DIRECTIONS{ Cell{ -1, 0 }, Cell{ 1, 0 }, Cell{ 0, -1 }, Cell{ 0, 1 } };
 Pen pencil = { GRASS };
 
@@ -282,6 +283,8 @@ int main()
 
     while (!WindowShouldClose())
     {
+        float dt = GetFrameTime();
+
         particleSys.CreateSnow(1, 10.0f, 1.0f, 50.0f, 10.0f, WHITE, 1.0f, GetScreenWidth(), true);
         std::string levelText = "Current Level: " + std::to_string(currentLevel);
         if (IsKeyReleased(KEY_SPACE))
@@ -294,7 +297,6 @@ int main()
                 UpdateBegin(button,game);
             }
             break;
-
         case MAPMAKER:
             if (IsKeyPressed(KEY_S)) {
                 mapManager.SaveMap(currentLevel, tiles);
@@ -320,7 +322,6 @@ int main()
         case PLAYGAME:
 
             UpdateBegin(game);
-            float dt = GetFrameTime();
             
             Vector2 mouse = GetMousePosition();
 
@@ -385,8 +386,12 @@ int main()
                 break;
             }
             break;
+        case CREDITS:
+            
+            UpdateBegin(playAgain, game);
             break;
         }
+       
 
         BeginDrawing();
         switch (game.gameState) {
@@ -437,19 +442,16 @@ int main()
                 break;
 
             case PLAY:
-                //during game
-                DrawPlay(game);
+
                 break;
 
             case GAMEOVER:
-                //when run out of health
-                DrawEnd(game);
-                
+
                 break;
             }
             break;
         case CREDITS:
-            game.gameState = MAINMENU;
+            DrawGameOver();
             break;
         }
             
