@@ -34,6 +34,9 @@ int maxHealth = 100;
 
 int currentLevel = 1;
 
+int totalEnemiesSpawned = 0;
+int maxEnemiesPerLevel = 10;
+
 void SaveCurrentLevel(int currentLevel) {
     std::ofstream file("current_level.txt");
     if (file.is_open()) {
@@ -177,7 +180,7 @@ bool atEnd = false;
 void InitalizeGameStuff(std::vector<Turret>& turrets, int tiles[TILE_COUNT][TILE_COUNT]) {
      spawnInterval = 1.0f;
      spawnTimer = 0.0f;
-     currentLevel = 1;
+     currentLevel;
 
      turrets.clear();
 
@@ -214,6 +217,7 @@ void InitalizeGameStuff(std::vector<Turret>& turrets, int tiles[TILE_COUNT][TILE
 
 int main()
 {   
+    currentLevel = 1;
     currentLevel = LoadCurrentLevel();
     
     int tiles[TILE_COUNT][TILE_COUNT];
@@ -228,7 +232,7 @@ int main()
     game.playButtonColour = ORANGE;
     game.gameState = MAINMENU;
     game.playState = BEGINNEW;
-    const int numberOfEnemies = 10;
+    int numberOfEnemies = maxEnemiesPerLevel;
     
     
     std::vector<Enemy> enemies;
@@ -309,12 +313,12 @@ int main()
             //spawns
 
             //can fix this later
-            if (enemies.size() < numberOfEnemies && spawnTimer >= spawnInterval) {
+            if (totalEnemiesSpawned < maxEnemiesPerLevel && spawnTimer >= spawnInterval) {
                 EnemyType randomType = enemyTypes[std::rand() % enemyTypes.size()];
                 Enemy newEnemy = CreateEnemy(randomType, enemySpawnPosition);
-
                 enemies.push_back(newEnemy);
                 spawnTimer = 0.0f;
+                totalEnemiesSpawned++;
             }
 
             //update all enemies
@@ -322,6 +326,13 @@ int main()
             UpdateTurrets(turrets, bullets, enemies, dt);
             UpdateBullets(bullets, enemies, dt);
             particleSys.Update(dt);
+            if (totalEnemiesSpawned >= maxEnemiesPerLevel && enemies.empty()) {
+                currentLevel++;
+                mapManager.LoadMap(currentLevel, tiles);
+                totalEnemiesSpawned = 0;
+                maxEnemiesPerLevel + 10;
+                InitalizeGameStuff(turrets, tiles);
+            }
             if (currentHealth <= 0) {
                 game.playState = GAMEOVER;
             }
