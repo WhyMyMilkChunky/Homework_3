@@ -291,7 +291,6 @@ int main()
 
     while (!WindowShouldClose())
     {
-        particleSys.CreateSnow(30, 20.0f, 1.0f, 50.0f, 10.0f, WHITE, 2.0f, GetScreenWidth());
 
         float dt = GetFrameTime();
 
@@ -343,7 +342,7 @@ int main()
                 }
             }
 
-
+            //particleSys.CreateSnow(1, 10.0f, 1.0f, 50.0f, 10.0f, WHITE, 1.0f, GetScreenWidth(), GetScreenHeight());
             //update all enemies
             UpdateEnemies(enemies, waypoints, dt);
             UpdateTurrets(turrets, bullets, enemies, dt);
@@ -417,8 +416,9 @@ int main()
             DrawText(levelText.c_str(), 10, 10, 20, BLACK);
                     break;
         case PLAYGAME :
+
             if (currentWeather == WeatherType::WINTER) {
-                particleSys.CreateSnow(1, 10.0f, 1.0f, 50.0f, 10.0f, WHITE, 1.0f, GetScreenWidth(), true);
+                particleSys.CreateSnow(5, Random(1.0f, 5.0f), 2.0f, 50.0f, 90.0f, WHITE, 1.0f, GetScreenWidth(), GetScreenHeight());
             }
             ClearBackground(BLACK);
             //tiles

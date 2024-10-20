@@ -66,30 +66,29 @@ void ParticleSystem::CreateSmoke(Vector2 position, int particleCount, float life
     }
 
 }
-void ParticleSystem::CreateSnow(int particleCount, float lifetime, float size, float speed, float spread, Color color, float opacity, int screenWidth) {
+void ParticleSystem::CreateSnow(int particleCount, float lifetime, float size, float speed, float spread, Color color, float opacity, int screenWidth, int screenHeight) {
     for (int i = 0; i < particleCount; i++) {
         Particle p;
 
-        // Start snowflakes from a random x position at the top of the screen
+        // Start the snowflakes from a random x and y position on the screen
         p.position.x = static_cast<float>(rand() % screenWidth);
-        p.position.y = -size; // Start slightly above the top of the screen
-
-        // Set particle lifetime
-        p.lifeTime = lifetime;
+        p.position.y = static_cast<float>(rand() % screenHeight); // Random Y position
 
         // Random drift and speed for a natural snow fall
         p.velocity.x = (static_cast<float>(rand()) / static_cast<float>(RAND_MAX) - 0.5f) * spread; // Small horizontal drift
         p.velocity.y = speed; // Downward speed
 
         // Particle properties
+        p.lifeTime = lifetime;
         p.size = size;
         p.color = color;
-        p.opacity = 0.0f; // Start with zero opacity for fade-in effect
+        p.opacity = opacity;
 
-        // Add particle to the particle system
         particles.push_back(p);
     }
 }
+
+
 void ParticleSystem::Update(float deltaTime) {
     for (auto& p : particles) {
         p.position.x += p.velocity.x * deltaTime;
