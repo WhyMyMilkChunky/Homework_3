@@ -27,3 +27,4 @@ struct Button {
 void CreateButton(int yOffset, const char* buttonText, Color buttonColour, int newState, std::vector<Button>& Buttons);
 void DrawButton(Button button);
 void DrawHealthBar(int currentHealth, int maxHealth);
+void DisplayInstructions();
