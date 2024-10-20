@@ -102,8 +102,7 @@ void DrawEnemies(const std::vector<Enemy>& enemies, Texture2D enemyTexture) {
             { enemy.position.x, enemy.position.y, ENEMY_RADIUS * 2, ENEMY_RADIUS * 2 },
             { ENEMY_RADIUS, ENEMY_RADIUS },
             0,
-            tint
-        );
+            tint);
 
         DrawEnemyHealthBar(enemy.position, enemy.health, enemy.maxHealth, ENEMY_RADIUS);
     }

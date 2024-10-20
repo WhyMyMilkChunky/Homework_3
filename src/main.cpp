@@ -183,6 +183,7 @@ void InitalizeGameStuff(std::vector<Turret>& turrets, int tiles[TILE_COUNT][TILE
      currentLevel;
 
      turrets.clear();
+    
 
     // Automatic approach:
      waypoints = FloodFill(StartCell(tiles), tiles, WAYPOINT);
@@ -214,7 +215,6 @@ void InitalizeGameStuff(std::vector<Turret>& turrets, int tiles[TILE_COUNT][TILE
         std::cout << "Failed to load map." << std::endl;
     }
 };
-
 int main()
 {   
     currentLevel = 1;
@@ -227,9 +227,11 @@ int main()
     else {
         std::cout << "Failed to load map." << std::endl;
     }
+    
     Game game;
     game.playButton = playButton;
-    game.playButtonColour = ORANGE;
+    game.playButtonColourOG = ORANGE;
+    game.playButtonColour = game.playButtonColourOG;
     game.gameState = MAINMENU;
     game.playState = BEGINNEW;
     int numberOfEnemies = maxEnemiesPerLevel;
@@ -306,8 +308,10 @@ int main()
             ChangeTile(SelectCell(), pencil.tileType, tiles);
             break;
         case PLAYGAME:
+
+            UpdateBegin(game);
             float dt = GetFrameTime();
-            spawnTimer += dt;
+            
             Vector2 mouse = GetMousePosition();
 
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
@@ -318,30 +322,59 @@ int main()
                     turrets.push_back(CreateTurret(turretPosition)); // Create and add a turret at that position
                 }
             }
-            //spawns
-            if (totalEnemiesSpawned < maxEnemiesPerLevel && spawnTimer >= spawnInterval) {
-                EnemyType randomType = enemyTypes[std::rand() % enemyTypes.size()];
-                Enemy newEnemy = CreateEnemy(randomType, enemySpawnPosition);
-                enemies.push_back(newEnemy);
-                spawnTimer = 0.0f;
-                totalEnemiesSpawned++;
-            }
+
 
             //update all enemies
             UpdateEnemies(enemies, waypoints, dt);
             UpdateTurrets(turrets, bullets, enemies, dt);
             UpdateBullets(bullets, enemies, dt);
             particleSys.Update(dt);
-            if (totalEnemiesSpawned >= maxEnemiesPerLevel && enemies.empty()) {
-                currentLevel++;
-                mapManager.LoadMap(currentLevel, tiles);
-                totalEnemiesSpawned = 0;
-                maxEnemiesPerLevel + 10;
-                InitalizeGameStuff(turrets, tiles);
-            }
+
+            //death switch state
             if (currentHealth <= 0) {
                 game.playState = GAMEOVER;
             }
+            switch (game.playState)
+            {
+            case BEGINNEW:
+                //setup before game
+                game.isButtonEnabled = true;
+                ChangeGamemode(PLAY, game);
+                break;
+
+            case PLAY:
+                //during game
+                game.isButtonEnabled = false;
+                spawnTimer += dt;
+                if (totalEnemiesSpawned >= maxEnemiesPerLevel && enemies.empty()) {
+                    bullets.clear();
+                    currentLevel++;
+                    mapManager.LoadMap(currentLevel, tiles);
+                    InitalizeGameStuff(turrets, tiles);
+                    game.playState = BEGINNEW;
+                    totalEnemiesSpawned = 0;
+                    maxEnemiesPerLevel = +10;
+                }
+                //spawns
+                if (totalEnemiesSpawned < maxEnemiesPerLevel && spawnTimer >= spawnInterval) {
+                    EnemyType randomType = enemyTypes[std::rand() % enemyTypes.size()];
+                    Enemy newEnemy = CreateEnemy(randomType, enemySpawnPosition);
+                    enemies.push_back(newEnemy);
+                    spawnTimer = 0.0f;
+                    totalEnemiesSpawned++;
+                }
+                break;
+
+            case GAMEOVER:
+                //when run out of health
+                bullets.clear();
+                enemies.clear();
+                turrets.clear();
+                //PLAY SOUND WOULD BE COOL
+                game.gameState = CREDITS;
+                break;
+            }
+            break;
             break;
         }
 
@@ -362,7 +395,7 @@ int main()
                     break;
         case PLAYGAME :
             
-            ClearBackground(RAYWHITE);
+            ClearBackground(BLACK);
             //tiles
             for (int row = 0; row < TILE_COUNT; row++) {
                 for (int col = 0; col < TILE_COUNT; col++) {
@@ -385,21 +418,27 @@ int main()
             DrawTurrets(turrets, turretTex);
             //this wil draw the in game playstates button
             DrawHealthBar(currentHealth, maxHealth);
-            switch (game.gameState)
+            switch (game.playState)
             {
             case BEGINNEW:
+                //setup before game
                 DrawBegin(game);
                 break;
 
             case PLAY:
+                //during game
                 DrawPlay(game);
                 break;
 
             case GAMEOVER:
+                //when run out of health
                 DrawEnd(game);
                 
                 break;
             }
+            break;
+        case CREDITS:
+            game.gameState = MAINMENU;
             break;
         }
             
@@ -408,5 +447,6 @@ int main()
     }
     UnloadTexture(tileTex);
     CloseWindow();
+    enemies.clear();
     return 0;
 }

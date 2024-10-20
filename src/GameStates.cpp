@@ -12,9 +12,11 @@ Rectangle playButton = {
     BUTTON_HEIGHT
 };
 
-void ChangeGamemode(PlayStates newPlayState)
+void ChangeGamemode(PlayStates newPlayState,Game& game)
 {
-	currentPlayState = newPlayState;
+    bool mouseOver = CheckCollisionPointRec(GetMousePosition(), game.playButton);
+    if (mouseOver && IsMouseButtonReleased(MOUSE_LEFT_BUTTON))
+        game.playState = newPlayState;
 }
 
 void DrawBegin(Game& game)
@@ -40,6 +42,15 @@ void UpdateBegin(Button& button, Game& game) {
     button.buttonColour = mouseOver ? buttonColorIn : buttonColorOut;
     if (mouseOver && IsMouseButtonReleased(MOUSE_LEFT_BUTTON))
         game.gameState = button.stateChange;
+}
+void UpdateBegin(Game& game) {
+    // Add mouse-out vs mouse-over colour
+    Color buttonColorOut = game.playButtonColourOG;
+    //Color buttonColorIn = { button.colour .r /2, button.colour .b /2, button.colour .g /2, button.colour .a};
+    Color buttonColorIn = ColorBrightness(game.playButtonColourOG, -0.2f);
+    bool mouseOver = CheckCollisionPointRec(GetMousePosition(), game.playButton);
+    game.playButtonColour = mouseOver ? buttonColorIn : buttonColorOut;
+
 }
 void UpdateBegin(std::vector<ToolbarButton>& buttons,Pen& pencil)
 {
