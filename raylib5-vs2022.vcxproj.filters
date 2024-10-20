@@ -107,5 +107,6 @@
     <Media Include="Assets\Audio\music1.mp3" />
     <Media Include="Assets\Audio\musicBuildStage.mp3" />
     <Media Include="Assets\Audio\shoot1.mp3" />
+    <Media Include="Assets\Audio\musicGameOver.mp3" />
   </ItemGroup>
 </Project>

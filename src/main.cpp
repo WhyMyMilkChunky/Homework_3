@@ -50,7 +50,8 @@ void UnloadWeatherTextures() {
 AudioManager audioManager;
 std::vector<std::pair<std::string, std::string>> musicFiles = {
     {"playMusic", "Assets/Audio/music1.mp3"},
-    {"readyMusic", "Assets/Audio/musicBuildStage.mp3"}
+    {"readyMusic", "Assets/Audio/musicBuildStage.mp3"},
+    {"gameOver", "Assets/Audio/musicGameOver.mp3" }
     
 };
 
@@ -424,6 +425,7 @@ int main()
                 enemies.clear();
                 turrets.clear();
                 //PLAY SOUND WOULD BE COOL
+                audioManager.PlayMusic("gameOver");
                 game.gameState = CREDITS;
                 break;
             }
