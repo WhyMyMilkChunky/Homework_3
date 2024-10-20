@@ -17,6 +17,7 @@
 #include <string>
 
 
+
 //long main scripts give me anxiety so i refractored some of the code to different places
 constexpr float BULLET_RADIUS = 6.0f;
 constexpr float ENEMY_RADIUS = 25.0f;
@@ -28,7 +29,8 @@ constexpr std::array<Cell, 4> DIRECTIONS{ Cell{ -1, 0 }, Cell{ 1, 0 }, Cell{ 0, 
 Pen pencil = { GRASS };
 
 
-
+int currentHealth = 100;
+int maxHealth = 100;
 
 int currentLevel = 1;
 
@@ -176,6 +178,9 @@ void InitalizeGameStuff(std::vector<Turret> turrets, int tiles[TILE_COUNT][TILE_
      spawnInterval = 1.0f;
      spawnTimer = 0.0f;
      currentLevel = 1;
+
+     turrets.clear();
+
     // Automatic approach:
      waypoints = FloodFill(StartCell(tiles), tiles, WAYPOINT);
     curr = 0;
@@ -314,6 +319,7 @@ int main()
                 break;
 
         case MAPMAKER:
+            
             DrawBackground(tiles, tileTex);
             for (ToolbarButton& button : toolbarButtons) {
 
@@ -322,6 +328,7 @@ int main()
             DrawText(levelText.c_str(), 10, 10, 20, BLACK);
                     break;
         case PLAYGAME :
+            
             ClearBackground(RAYWHITE);
             //tiles
             for (int row = 0; row < TILE_COUNT; row++) {
@@ -340,10 +347,11 @@ int main()
                 DrawCircleV(bullet.pos, BULLET_RADIUS, RED);
             }
             //add particles to turrets
-            particleSys.Draw();
+            
             //draw turrets
             DrawTurrets(turrets, turretTex);
             //this wil draw the in game playstates button
+            DrawHealthBar(currentHealth, maxHealth);
             switch (game.gameState)
             {
             case BEGINNEW:

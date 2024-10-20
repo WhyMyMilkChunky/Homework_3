@@ -5,8 +5,9 @@
 #include "tiles.h"
 
 constexpr float ENEMY_RADIUS = 25.0f;
+constexpr int DAMAGE_PER_ENEMY = 10;
 
-
+extern int currentHealth;
 //i pretty much just moved your code here
 void UpdateEnemies(std::vector<Enemy>& enemies, const std::vector<Cell>& waypoints, float dt) {
 
@@ -15,6 +16,11 @@ void UpdateEnemies(std::vector<Enemy>& enemies, const std::vector<Cell>& waypoin
             int curr = enemy.currentWaypoint;    
             //poof, gone!
             if (curr >= waypoints.size() - 1) {
+                currentHealth -= DAMAGE_PER_ENEMY;
+                if (currentHealth <= 0) {
+                    currentHealth = 0;
+                    
+                }
                 return true;
             }
 

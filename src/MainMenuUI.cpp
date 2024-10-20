@@ -1,5 +1,6 @@
 #include "MainMenuUI.h"
 #include "GameStates.h"	
+#include <string>
 
 
 void CreateButton(int yOffset, const char* buttonText, Color buttonColour, int newState, std::vector<Button>& Buttons)
@@ -33,4 +34,32 @@ void DrawButton(Button button) {
 	int textY = button.rec.y;
 	//Draw text over button
 	DrawText(button.buttonText, textX, textY, 80, RAYWHITE);
+}
+void DrawHealthBar(int currentHealth, int maxHealth)
+{
+	//centered horizontally
+	int posX = (SCREEN_SIZEX / 2) - (HEALTH_BAR_WIDTH / 2);
+	int posY = SCREEN_TOP_MARGIN;
+
+	//width of the inner health bar
+	float healthPercentage = (float)currentHealth / (float)maxHealth;
+	int innerBarWidth = (int)(HEALTH_BAR_WIDTH * healthPercentage);
+
+	//da outline
+	Rectangle outerRect = { (float)posX - HEALTH_BAR_OUTLINE_THICKNESS, (float)posY - HEALTH_BAR_OUTLINE_THICKNESS,
+							(float)HEALTH_BAR_WIDTH + 2 * HEALTH_BAR_OUTLINE_THICKNESS,
+							(float)HEALTH_BAR_HEIGHT + 2 * HEALTH_BAR_OUTLINE_THICKNESS };
+
+	//actual helth bar
+	Rectangle innerRect = { (float)posX, (float)posY, (float)innerBarWidth, (float)HEALTH_BAR_HEIGHT };
+
+	DrawRectangleRec(outerRect, BLACK);
+	DrawRectangleRec(innerRect, RED);
+
+	//display curr helth/max health
+	std::string healthText = std::to_string(currentHealth) + "/" + std::to_string(maxHealth);
+	int textWidth = MeasureText(healthText.c_str(), 20);
+	int textPosX = (SCREEN_SIZEX / 2) - (textWidth / 2);
+	int textPosY = posY + (HEALTH_BAR_HEIGHT / 2) - 10;  // vertically center txt
+	DrawText(healthText.c_str(), textPosX, textPosY, 20, WHITE);
 }

@@ -9,6 +9,10 @@ constexpr int SCREEN_SIZEY = 900;
 constexpr int MENU_FONT_SIZE = 80;
 constexpr int MENU_BUTTON_WIDTH = 600;
 constexpr int MENU_BUTTON_HEIGHT = 100;
+constexpr int HEALTH_BAR_WIDTH = 400;
+constexpr int HEALTH_BAR_HEIGHT = 30;
+constexpr int HEALTH_BAR_OUTLINE_THICKNESS = 5;
+constexpr int SCREEN_TOP_MARGIN = 20;
 struct Button {
 	//current colour
 	Color buttonColour;
@@ -22,3 +26,4 @@ struct Button {
 
 void CreateButton(int yOffset, const char* buttonText, Color buttonColour, int newState, std::vector<Button>& Buttons);
 void DrawButton(Button button);
+void DrawHealthBar(int currentHealth, int maxHealth);
