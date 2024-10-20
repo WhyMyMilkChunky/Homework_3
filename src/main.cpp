@@ -220,6 +220,12 @@ void InitalizeGameStuff(std::vector<Turret>& turrets, int tiles[TILE_COUNT][TILE
             }
         }
     }
+    //change weather
+    if (currentLevel % 2 == 0)
+        currentWeather = WeatherType::WINTER;
+    else
+        currentWeather = WeatherType::SUMMER;
+    particleSys.Clear();
     if (mapManager.LoadMap(currentLevel, tiles)) {
         std::cout << "Map loaded successfully!" << std::endl;
     }
@@ -280,13 +286,14 @@ int main()
     Texture2D tileTex = LoadTexture("Assets/Textures/tilemap1.png");
     Texture2D turretTex = LoadTexture("Assets/Textures/Turret_Top.png");
     Texture2D enemyTex = LoadTexture("Assets/Textures/Chomp.png");
+    LoadWeatherTextures();
     SetTargetFPS(60);
 
     while (!WindowShouldClose())
     {
+
         float dt = GetFrameTime();
 
-        particleSys.CreateSnow(1, 10.0f, 1.0f, 50.0f, 10.0f, WHITE, 1.0f, GetScreenWidth(), true);
         std::string levelText = "Current Level: " + std::to_string(currentLevel);
         if (IsKeyReleased(KEY_SPACE))
         {
@@ -341,7 +348,6 @@ int main()
             UpdateTurrets(turrets, bullets, enemies, dt);
             UpdateBullets(bullets, enemies, dt);
             particleSys.Update(dt);
-
             //death switch state
             if (currentHealth <= 0) {
                 game.playState = GAMEOVER;
@@ -402,7 +408,7 @@ int main()
 
         case MAPMAKER:
             
-            DrawBackground(tiles, tileTex);
+            DrawBackground(tiles, summerTileTex);
             for (ToolbarButton& button : toolbarButtons) {
 
                 DrawToolBar(button);
@@ -410,12 +416,23 @@ int main()
             DrawText(levelText.c_str(), 10, 10, 20, BLACK);
                     break;
         case PLAYGAME :
-            
+            if (currentWeather == WeatherType::WINTER) {
+                particleSys.CreateSnow(1, 10.0f, 1.0f, 50.0f, 10.0f, WHITE, 1.0f, GetScreenWidth(), true);
+            }
             ClearBackground(BLACK);
             //tiles
             for (int row = 0; row < TILE_COUNT; row++) {
                 for (int col = 0; col < TILE_COUNT; col++) {
-                    DrawTile(row, col, static_cast<TileType>(tiles[row][col]), tileTex);
+                    switch (currentWeather) {
+                    case WeatherType::SUMMER:
+                        DrawTile(row, col, static_cast<TileType>(tiles[row][col]), summerTileTex);
+
+                        break;
+                    case WeatherType::WINTER:
+                        DrawTile(row, col, static_cast<TileType>(tiles[row][col]), winterTileTex);
+
+                        break;
+                    }
                 }
             }
             for (const Bullet& bullet : bullets) {
@@ -460,6 +477,7 @@ int main()
         EndDrawing();
     }
     UnloadTexture(tileTex);
+    UnloadWeatherTextures();
     CloseWindow();
     enemies.clear();
     return 0;
