@@ -310,9 +310,15 @@ int main()
             spawnTimer += dt;
             Vector2 mouse = GetMousePosition();
 
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+                Cell selectedCell = SelectCell();
+                if (InBounds(selectedCell) && tiles[selectedCell.row][selectedCell.col] == GRASS) { // Ensure it's a valid place
+                    ChangeTile(selectedCell, TURRET, tiles); // Place turret visually on tile
+                    Vector2 turretPosition = TileCenter(selectedCell);
+                    turrets.push_back(CreateTurret(turretPosition)); // Create and add a turret at that position
+                }
+            }
             //spawns
-
-            //can fix this later
             if (totalEnemiesSpawned < maxEnemiesPerLevel && spawnTimer >= spawnInterval) {
                 EnemyType randomType = enemyTypes[std::rand() % enemyTypes.size()];
                 Enemy newEnemy = CreateEnemy(randomType, enemySpawnPosition);
