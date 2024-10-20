@@ -2,6 +2,12 @@
 #include "GameStates.h"	
 #include <string>
 
+Button playAgain = {
+playAgain.buttonColour = playAgain.colour,
+playAgain.colour = RED,
+playAgain.stateChange = MAINMENU,
+playAgain.rec = { 100,560,600,100 },
+playAgain.buttonText = "Play Again!" };
 
 void CreateButton(int yOffset, const char* buttonText, Color buttonColour, int newState, std::vector<Button>& Buttons)
 {
@@ -67,4 +73,16 @@ void DisplayInstructions() {
 	const char* instructions = 
 		"Space to go back to main menu\n\n\nMap Maker: Up page and Down page to\n\n\nswitch between levels\n\n\nS key to save map ";
 	DrawText(instructions, 50, 400, 30, WHITE);
+}
+
+void DrawGameOver()
+{
+	const char* gameoverText = "Game over!";
+	const char* scoreText = "Your score is:";
+	ClearBackground(BLACK);
+	DrawText(gameoverText, 400 - MeasureText(gameoverText,80)/2, 200, 80, BLUE);
+
+	//play again button
+
+	DrawButton(playAgain);
 }

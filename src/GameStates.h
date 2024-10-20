@@ -29,25 +29,26 @@ struct Game {
 	Color playButtonColour;
 	Color playButtonColourOG;
 	Rectangle playButton;
+	const char* buttonText;
 };
 //Change button size and pos here
 constexpr int BUTTON_POSX = 0;
 constexpr int BUTTON_POSY = 800;
-constexpr int BUTTON_WIDTH = 160;
+constexpr int BUTTON_WIDTH = 300;
 constexpr int BUTTON_HEIGHT = 200;
 constexpr const char* BUTTON_TEXT_START = "Start Game";
 constexpr const char* BUTTON_TEXT_NEXT = "Next Round";
 constexpr const char* BUTTON_TEXT_NEW = "New Game";
 constexpr const char* TEXT_OVER = "Game Over";
-
+//actually change playmode
 void ChangeGamemode(PlayStates newPlayState,Game& game);
+//draws game button
 void DrawBegin(Game& game);
-void DrawPlay(Game& game);
-void DrawEnd(Game& game);
-//void UpdateBegin(Game& game);
+//updates buttons so they change while hovering
 void UpdateBegin(Button& button, Game& game);
 void UpdateBegin(std::vector<ToolbarButton>& button, Pen& pencil);
 void UpdateBegin(Game& game);
+
 //mainmenu
 void DrawMainMenu(std::vector<Button>& Buttons);
 

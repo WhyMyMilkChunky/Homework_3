@@ -112,3 +112,6 @@ void ParticleSystem::Draw() {
         DrawCircleV(p.position, p.size, colorWithOpacity);
     }
 }
+void ParticleSystem::Clear() {
+    particles.clear();
+}

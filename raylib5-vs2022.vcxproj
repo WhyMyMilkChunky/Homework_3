@@ -35,6 +35,7 @@
   <ItemGroup>
     <Image Include="Assets\Textures\Chomp.png" />
     <Image Include="Assets\Textures\Tilemap1.png" />
+    <Image Include="Assets\Textures\Tilemap2.png" />
     <Image Include="Assets\Textures\Turret_Top.png" />
   </ItemGroup>
   <ItemGroup>

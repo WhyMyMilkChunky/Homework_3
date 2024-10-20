@@ -28,3 +28,5 @@ void CreateButton(int yOffset, const char* buttonText, Color buttonColour, int n
 void DrawButton(Button button);
 void DrawHealthBar(int currentHealth, int maxHealth);
 void DisplayInstructions();
+
+void DrawGameOver();
