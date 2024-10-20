@@ -83,6 +83,7 @@ std::vector<Cell> FloodFill(Cell start, int tiles[TILE_COUNT][TILE_COUNT], TileT
 {
     // "open" = "places we want to search", "closed" = "places we've already searched".
     std::vector<Cell> result;
+    result.push_back(start);
     std::vector<Cell> open;
     bool closed[TILE_COUNT][TILE_COUNT];
     for (int row = 0; row < TILE_COUNT; row++)
@@ -96,7 +97,7 @@ std::vector<Cell> FloodFill(Cell start, int tiles[TILE_COUNT][TILE_COUNT], TileT
 
     // Add the starting cell to the exploration queue & search till there's nothing left!
     open.push_back(start);
-    result.push_back(start);
+    
     while (!open.empty())
     {
         // Remove from queue and prevent revisiting
