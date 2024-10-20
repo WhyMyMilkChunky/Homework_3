@@ -3,6 +3,10 @@
 #include <cstring>
 #include "tiles.h"
 
+enum class WeatherType {
+    SUMMER,
+    WINTER
+};
 class MapManager {
 public:
     // t h e   c o n s t r u c t o r     :O
