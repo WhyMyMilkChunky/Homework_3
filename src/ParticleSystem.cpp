@@ -66,7 +66,30 @@ void ParticleSystem::CreateSmoke(Vector2 position, int particleCount, float life
     }
 
 }
+void ParticleSystem::CreateSnow(int particleCount, float lifetime, float size, float speed, float spread, Color color, float opacity, int screenWidth, bool prewarm) {
+    for (int i = 0; i < particleCount; i++) {
+        Particle p;
+        p.position.x = static_cast<float>(rand() % screenWidth);
 
+        if (prewarm) {
+                       p.position.y = static_cast<float>(rand() % GetScreenHeight());  
+            p.lifeTime = lifetime * (1.0f - p.position.y / static_cast<float>(GetScreenHeight()));
+        }
+        else {
+            p.position.y = -size; 
+            p.lifeTime = lifetime;
+        }
+        p.velocity.x = (static_cast<float>(rand()) / static_cast<float>(RAND_MAX) - 0.5f) * spread;
+        p.velocity.y = speed;
+
+      
+        p.size = size;
+        p.color = color;
+        p.opacity = opacity;
+
+        particles.push_back(p);
+    }
+}
 void ParticleSystem::Update(float deltaTime) {
     for (auto& p : particles) {
         p.position.x += p.velocity.x * deltaTime;
@@ -80,6 +103,7 @@ void ParticleSystem::Update(float deltaTime) {
         return p.lifeTime <= 0.0f || p.opacity <= 0.0f;
         }), particles.end());
 }
+
 
 void ParticleSystem::Draw() {
     for (const auto& p : particles) {

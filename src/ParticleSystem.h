@@ -24,7 +24,9 @@ public:
     void CreateExplosion(Vector2 position, int particleCount, float lifetime, float size, Color color, float opacity, float velocity);
     void CreateSmoke(Vector2 position, int particleCount, float lifetime, float size, Color color, float opacity, float velocity);
     void CreateMuzzleFlash(Vector2 position, Vector2 direction, int particleCount, float lifetime, float size, Color color, float opacity, float speed, float spread);
+    void CreateSnow(int particleCount, float lifetime, float size, float speed, float spread, Color color, float opacity, int screenWidth, bool prewarm);
     void Update(float deltaTime);
+    
     void Draw();  
 
 private:

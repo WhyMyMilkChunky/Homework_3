@@ -260,8 +260,6 @@ int main()
     EnemyType::RUI,
     EnemyType::CONNOR
     };
-    
-
     CreateButton(100, "Play", PURPLE, PLAYGAME,Buttons);
     CreateButton(250, "Map Maker", DARKPURPLE, MAPMAKER,Buttons);
 
@@ -284,6 +282,7 @@ int main()
 
     while (!WindowShouldClose())
     {
+        particleSys.CreateSnow(1, 10.0f, 1.0f, 50.0f, 10.0f, WHITE, 1.0f, GetScreenWidth(), true);
         std::string levelText = "Current Level: " + std::to_string(currentLevel);
         if (IsKeyReleased(KEY_SPACE))
         {
@@ -427,6 +426,7 @@ int main()
             
             //draw turrets
             DrawTurrets(turrets, turretTex);
+            particleSys.Draw();
             //this wil draw the in game playstates button
             DrawHealthBar(currentHealth, maxHealth);
             switch (game.playState)
