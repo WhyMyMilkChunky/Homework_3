@@ -188,6 +188,9 @@ void InitalizeGameStuff(std::vector<Turret>& turrets, int tiles[TILE_COUNT][TILE
      enemySpawnPosition = TileCenter(waypoints[curr]);
      enemySpeed = 69.0f;
      atEnd = false;
+
+     std::srand(static_cast<unsigned>(std::time(0)));
+
     //this will need to be redone because we need to place the turrets during the game
     for (int row = 0; row < TILE_COUNT; row++)
     {
@@ -233,6 +236,13 @@ int main()
     std::vector<Turret> turrets;
     std::vector<ToolbarButton> toolbarButtons;
     std::vector<Button> Buttons;
+    const std::array<EnemyType, 5> enemyTypes = {
+    EnemyType::BASIC,
+    EnemyType::WALLACE,
+    EnemyType::JOSS,
+    EnemyType::RUI,
+    EnemyType::CONNOR
+    };
     
 
     CreateButton(100, "Play", PURPLE, PLAYGAME,Buttons);
@@ -297,9 +307,12 @@ int main()
             Vector2 mouse = GetMousePosition();
 
             //spawns
-            if (enemies.size() < numberOfEnemies && spawnTimer >= spawnInterval) {
 
-                Enemy newEnemy = { enemySpawnPosition, {0, 0}, enemySpeed };
+            //can fix this later
+            if (enemies.size() < numberOfEnemies && spawnTimer >= spawnInterval) {
+                EnemyType randomType = enemyTypes[std::rand() % enemyTypes.size()];
+                Enemy newEnemy = CreateEnemy(randomType, enemySpawnPosition);
+
                 enemies.push_back(newEnemy);
                 spawnTimer = 0.0f;
             }
