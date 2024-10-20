@@ -246,6 +246,7 @@ int main()
     game.playButtonColour = game.playButtonColourOG;
     game.gameState = MAINMENU;
     game.playState = BEGINNEW;
+    game.buttonText = "Start round";
     int numberOfEnemies = maxEnemiesPerLevel;
     
     
