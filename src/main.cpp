@@ -406,7 +406,7 @@ int main()
                     InitalizeGameStuff(turrets, tiles);
                     game.playState = BEGINNEW;
                     totalEnemiesSpawned = 0;
-                    maxEnemiesPerLevel = +10;
+                    maxEnemiesPerLevel += 10;
                 }
                 //spawns
                 if (totalEnemiesSpawned < maxEnemiesPerLevel && spawnTimer >= spawnInterval) {
