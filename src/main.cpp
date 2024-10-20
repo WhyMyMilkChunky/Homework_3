@@ -172,7 +172,7 @@ Vector2 enemySpawnPosition;
 float enemySpeed = 69.0f;
 bool atEnd = false;
 
-void InitalizeGameStuff(std::vector<Turret> turrets, int tiles[TILE_COUNT][TILE_COUNT]) {
+void InitalizeGameStuff(std::vector<Turret>& turrets, int tiles[TILE_COUNT][TILE_COUNT]) {
      spawnInterval = 1.0f;
      spawnTimer = 0.0f;
      currentLevel = 1;
