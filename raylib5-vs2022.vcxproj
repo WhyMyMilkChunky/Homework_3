@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="map.bin" />
+    <None Include="map1.bin" />
     <None Include="map2.bin" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

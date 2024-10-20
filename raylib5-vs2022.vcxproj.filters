@@ -90,5 +90,8 @@
     <None Include="map2.bin">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="map1.bin">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

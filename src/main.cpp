@@ -26,6 +26,12 @@ extern Rectangle playButton;
 extern ParticleSystem particleSys;
 constexpr std::array<Cell, 4> DIRECTIONS{ Cell{ -1, 0 }, Cell{ 1, 0 }, Cell{ 0, -1 }, Cell{ 0, 1 } };
 Pen pencil = { GRASS };
+
+
+
+
+int currentLevel = 1;
+
 void SaveCurrentLevel(int currentLevel) {
     std::ofstream file("current_level.txt");
     if (file.is_open()) {
@@ -168,10 +174,9 @@ bool atEnd = false;
 void InitalizeGameStuff(std::vector<Turret> turrets, int tiles[TILE_COUNT][TILE_COUNT]) {
      spawnInterval = 1.0f;
      spawnTimer = 0.0f;
-
+     currentLevel = 1;
     // Automatic approach:
      waypoints = FloodFill(StartCell(tiles), tiles, WAYPOINT);
-
     curr = 0;
     next= curr + 1;
      enemySpawnPosition = TileCenter(waypoints[curr]);
@@ -190,7 +195,7 @@ void InitalizeGameStuff(std::vector<Turret> turrets, int tiles[TILE_COUNT][TILE_
             }
         }
     }
-    if (mapManager.LoadMap("map.bin", tiles)) {
+    if (mapManager.LoadMap(currentLevel, tiles)) {
         std::cout << "Map loaded successfully!" << std::endl;
     }
     else {
@@ -200,8 +205,10 @@ void InitalizeGameStuff(std::vector<Turret> turrets, int tiles[TILE_COUNT][TILE_
 
 int main()
 {   
+    currentLevel = LoadCurrentLevel();
+    
     int tiles[TILE_COUNT][TILE_COUNT];
-    if (mapManager.LoadMap("map.bin", tiles)) {
+    if (mapManager.LoadMap(currentLevel, tiles)) {
         std::cout << "Map loaded successfully!" << std::endl;
     }
     else {
