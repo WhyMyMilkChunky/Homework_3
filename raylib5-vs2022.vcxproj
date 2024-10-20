@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\AudioManager.cpp" />
     <ClCompile Include="src\enemies.cpp" />
     <ClCompile Include="src\GameStates.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -22,6 +23,7 @@
     <ClCompile Include="src\Turret.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\AudioManager.h" />
     <ClInclude Include="src\enemies.h" />
     <ClInclude Include="src\GameStates.h" />
     <ClInclude Include="src\MainMenuUI.h" />
@@ -42,6 +44,11 @@
     <None Include="map.bin" />
     <None Include="map1.bin" />
     <None Include="map2.bin" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Assets\Audio\music1.mp3" />
+    <Media Include="Assets\Audio\musicBuildStage.mp3" />
+    <Media Include="Assets\Audio\shoot1.mp3" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

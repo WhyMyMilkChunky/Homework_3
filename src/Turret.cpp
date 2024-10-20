@@ -3,6 +3,8 @@
 #include "Math.h"
 #include <cmath>
 #include "ParticleSystem.h"
+#include "MainMenuUI.h"
+#include "AudioManager.h"
 
 ParticleSystem particleSys;
 Turret CreateTurret(Vector2 position) {
@@ -22,29 +24,30 @@ void DrawTurrets(std::vector<Turret>& turrets, Texture2D turretTexture) {
     }
 }
 
-void UpdateTurrets(std::vector<Turret>& turrets, std::vector<Bullet>& bullets, std::vector<Enemy>& enemies, float dt) {
+void UpdateTurrets(std::vector<Turret>& turrets, std::vector<Bullet>& bullets, std::vector<Enemy>& enemies, float dt, AudioManager& audioManager) {
     for (Turret& turret : turrets) {
-        
+
         turret.cooldown -= dt;
 
         // Find the nearest enemy
         Enemy* target = FindNearestEnemy(turret, enemies);
         if (target) {
-            
             Vector2 direction = Subtract(target->position, turret.pos);
             float angle = atan2f(direction.y, direction.x) * (180.0f / PI);
             turret.rotationAngle = angle; //awkwardly snap the turret to point at its new "friend"
 
-            
             if (turret.cooldown <= 0.0f) {
                 Bullet bullet;
                 bullet.pos = turret.pos;
                 bullet.dir = Normalize(direction);
                 bullet.enabled = true;
                 bullets.push_back(bullet);
-                particleSys.CreateMuzzleFlash(turret.pos, bullet.dir, 13, 2, 3, YELLOW, 0.2F, 150, 0.2F);
 
-                turret.cooldown = turret.firingRate;//take a deep breath before firing again
+                // Create muzzle flash particle effect
+                particleSys.CreateMuzzleFlash(turret.pos, bullet.dir, 13, 2, 3, YELLOW, 0.2F, 150, 0.2F);
+                audioManager.PlaySpatialSFX("shot1", {SCREEN_SIZEY * 0.5,SCREEN_SIZEX * 0.5, }, turret.pos, 1, 800);
+
+                turret.cooldown = turret.firingRate; // Reset cooldown before firing again
             }
         }
     }

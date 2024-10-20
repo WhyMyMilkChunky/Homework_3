@@ -15,6 +15,7 @@
 #include "MainMenuUI.h"
 #include "MapManager.h"
 #include <string>
+#include "AudioManager.h"
 
 
 
@@ -23,11 +24,14 @@ constexpr float BULLET_RADIUS = 6.0f;
 constexpr float ENEMY_RADIUS = 25.0f;
 constexpr float BULLET_SPEED = 600.0f;
 extern Rectangle playButton;
+
 //extern const char* BUTTON_TEXT; // maybe dont need?
 extern ParticleSystem particleSys;
 extern Button playAgain;
 constexpr std::array<Cell, 4> DIRECTIONS{ Cell{ -1, 0 }, Cell{ 1, 0 }, Cell{ 0, -1 }, Cell{ 0, 1 } };
 Pen pencil = { GRASS };
+
+
 
 WeatherType currentWeather = WeatherType::SUMMER;
 Texture2D summerTileTex;
@@ -36,11 +40,40 @@ void LoadWeatherTextures() {
     summerTileTex = LoadTexture("Assets/Textures/Tilemap1.png");
     winterTileTex = LoadTexture("Assets/Textures/Tilemap2.png");
 }
-
 void UnloadWeatherTextures() {
     UnloadTexture(summerTileTex);
     UnloadTexture(winterTileTex);
 }
+
+
+
+AudioManager audioManager;
+std::vector<std::pair<std::string, std::string>> musicFiles = {
+    {"playMusic", "Assets/Audio/music1.mp3"},
+    {"readyMusic", "Assets/Audio/musicBuildStage.mp3"}
+    
+};
+
+std::vector<std::pair<std::string, std::string>> sfxFiles = {
+};
+
+std::vector<std::pair<std::string, std::string>> spatialSfxFiles = {
+    {"shot1", "Assets/Audio/shoot1.mp3"}
+    
+};
+void LoadAllSounds(AudioManager& audioManager) {
+    // Load music
+    for (const auto& music : musicFiles) {
+        audioManager.LoadMusic(music.first, music.second);
+    }
+    for (const auto& sfx : sfxFiles) {
+        audioManager.LoadSFX(sfx.first, sfx.second);
+    }
+    for (const auto& sfx : spatialSfxFiles) {
+        audioManager.LoadSpatialSFX("shot1", "Assets/Audio/shoot1.mp3", 10);
+    }
+}
+
 int currentHealth = 100;
 int maxHealth = 100;
 
@@ -237,7 +270,6 @@ int main()
 {   
     currentLevel = 1;
     currentLevel = LoadCurrentLevel();
-    
     int tiles[TILE_COUNT][TILE_COUNT];
     if (mapManager.LoadMap(currentLevel, tiles)) {
         std::cout << "Map loaded successfully!" << std::endl;
@@ -255,7 +287,8 @@ int main()
     game.buttonText = "Start round";
     int numberOfEnemies = maxEnemiesPerLevel;
     
-    
+    LoadAllSounds(audioManager);
+
     std::vector<Enemy> enemies;
     std::vector<Bullet> bullets;
     std::vector<Turret> turrets;
@@ -293,7 +326,7 @@ int main()
     {
 
         float dt = GetFrameTime();
-
+        audioManager.Update({ SCREEN_SIZEX * 0.5 , SCREEN_SIZEY* 0.5 });
         std::string levelText = "Current Level: " + std::to_string(currentLevel);
         if (IsKeyReleased(KEY_SPACE))
         {
@@ -345,7 +378,7 @@ int main()
             //particleSys.CreateSnow(1, 10.0f, 1.0f, 50.0f, 10.0f, WHITE, 1.0f, GetScreenWidth(), GetScreenHeight());
             //update all enemies
             UpdateEnemies(enemies, waypoints, dt);
-            UpdateTurrets(turrets, bullets, enemies, dt);
+            UpdateTurrets(turrets, bullets, enemies, dt, audioManager);
             UpdateBullets(bullets, enemies, dt);
             particleSys.Update(dt);
             //death switch state
@@ -356,6 +389,7 @@ int main()
             {
             case BEGINNEW:
                 //setup before game
+                audioManager.PlayMusic("readyMusic");
                 game.isButtonEnabled = true;
                 ChangeGamemode(PLAY, game);
                 break;
@@ -363,6 +397,7 @@ int main()
             case PLAY:
                 //during game
                 game.isButtonEnabled = false;
+                audioManager.PlayMusic("playMusic");
                 spawnTimer += dt;
                 if (totalEnemiesSpawned >= maxEnemiesPerLevel && enemies.empty()) {
                     bullets.clear();

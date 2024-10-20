@@ -42,6 +42,9 @@
     <ClCompile Include="src\MapManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\AudioManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Math.h">
@@ -71,6 +74,9 @@
     <ClInclude Include="src\MapManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\AudioManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\Textures\Tilemap1.png">
@@ -96,5 +102,10 @@
     <None Include="map1.bin">
       <Filter>Resource Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Assets\Audio\music1.mp3" />
+    <Media Include="Assets\Audio\musicBuildStage.mp3" />
+    <Media Include="Assets\Audio\shoot1.mp3" />
   </ItemGroup>
 </Project>
