@@ -13,6 +13,12 @@ struct Turret {
     float cooldown;
     float rotationAngle;
 };
+struct Spikes {
+    Vector2 pos;
+    float damage;
+ //how many enemys can get hit by it, like 3 or something
+    int health;
+};
 struct Bullet
 {
     Vector2 pos{};

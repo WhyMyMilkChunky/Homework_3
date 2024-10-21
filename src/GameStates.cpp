@@ -22,8 +22,8 @@ void ChangeGamemode(PlayStates newPlayState,Game& game)
 void DrawBegin(Game& game)
 {
     DrawRectangleRec(game.playButton, game.playButtonColour);
-    int textx = game.playButton.width/2 - (MeasureText(game.buttonText, 40)) / 2;
-    DrawText(game.buttonText,textx,game.playButton.y +40 - 10, 40, WHITE);
+    int textx = game.playButton.width/2 - (MeasureText(game.buttonText, 30)) / 2;
+    DrawText(game.buttonText,textx,game.playButton.y + 30, 30, WHITE);
 }
 void UpdateBegin(Button& button, Game& game) {
     // Add mouse-out vs mouse-over colour

@@ -31,6 +31,7 @@ extern ParticleSystem particleSys;
 extern Button playAgain;
 constexpr std::array<Cell, 4> DIRECTIONS{ Cell{ -1, 0 }, Cell{ 1, 0 }, Cell{ 0, -1 }, Cell{ 0, 1 } };
 Pen pencil = { GRASS };
+Pen inGamePencil = { TURRET };
 Toolbar toolbar = BASICTILES;
 
 
@@ -244,7 +245,6 @@ bool atEnd = false;
 void InitalizeGameStuff(std::vector<Turret>& turrets, int tiles[TILE_COUNT][TILE_COUNT]) {
      spawnInterval = 1.0f;
      spawnTimer = 0.0f;
-     currentLevel;
 
      turrets.clear();
    
@@ -312,6 +312,7 @@ int main()
     std::vector<Turret> turrets;
     std::vector<ToolbarButton> toolbarButtons;
     std::vector<ToolbarButton> toolbarDecorButtons;
+    std::vector<ToolbarButton> TurretButtons;
     std::vector<Button> Buttons;
     const std::array<EnemyType, 5> enemyTypes = {
     EnemyType::BASIC,
@@ -331,8 +332,14 @@ int main()
     CreateToolbarButton(TOOLBAR_BUTTON_WIDTH*4,SWITCH, "--->",toolbarButtons);
 
     CreateToolbarButton(0,SWITCH, "<---", toolbarDecorButtons);
-    CreateToolbarButton(TOOLBAR_BUTTON_WIDTH, ROCK, "Rock", toolbarDecorButtons);
-    CreateToolbarButton(TOOLBAR_BUTTON_WIDTH*2, TREE, "Tree", toolbarDecorButtons);
+    CreateToolbarButton(TOOLBAR_BUTTON_WIDTH, PUMPKIN, "Pumpkin", toolbarDecorButtons);
+    CreateToolbarButton(TOOLBAR_BUTTON_WIDTH*2, PLANT, "Plant", toolbarDecorButtons);
+    CreateToolbarButton(TOOLBAR_BUTTON_WIDTH*3, ROCK, "Rock", toolbarDecorButtons);
+    CreateToolbarButton(TOOLBAR_BUTTON_WIDTH*4, LOG, "Log", toolbarDecorButtons);
+
+    CreateToolbarButton(BUTTON_WIDTH, TURRET, "Turret", TurretButtons);
+    CreateToolbarButton(BUTTON_WIDTH*2-40, SPIKE, "Spikes", TurretButtons);
+    CreateToolbarButton(BUTTON_WIDTH*3-80, SPIKE, "Spikes", TurretButtons);
 
    
     float shootCurrent = 0.0f;
@@ -396,35 +403,13 @@ int main()
                     if (IsCellValid(SelectCell()))
                         ChangeTile(SelectCell(), pencil.tileType, tiles);
             }
-
-                //idk what this is but i took out placing turrets in map maker
-           // if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-           //     Cell selectedCell = SelectCell();
-           //
-           //     // Check if we can place another turret
-           //     if (placedTurrets < maxTurrets && InBounds(selectedCell) && tiles[selectedCell.row][selectedCell.col] == GRASS) {
-           //         // Place turret visually on the tile
-           //         ChangeTile(selectedCell, TURRET, tiles);
-           //
-           //         // Create and add the turret to the list
-           //         Vector2 turretPosition = TileCenter(selectedCell);
-           //         turrets.push_back(CreateTurret(turretPosition));
-           //
-           //         // Increment the number of placed turrets
-           //         placedTurrets++;
-           //     }
-           //     else if (placedTurrets >= maxTurrets) {
-           //         // Optionally, show feedback that the player can't place more turrets (e.g., flashing a message)
-           //         std::cout << "Turret limit reached!" << std::endl;
-           //     }
-           // }
             break;
         case PLAYGAME:
 
             UpdateBegin(game);
-            
+         
+            //place turrets
             Vector2 mouse = GetMousePosition();
-
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
                 Cell selectedCell = SelectCell();
 
@@ -441,8 +426,6 @@ int main()
                     std::cout << "Turret limit reached!" << std::endl;
                 }
             }
-
-            //particleSys.CreateSnow(1, 10.0f, 1.0f, 50.0f, 10.0f, WHITE, 1.0f, GetScreenWidth(), GetScreenHeight());
             //update all enemies
             UpdateEnemies(enemies, waypoints, dt, floatingTexts);
             UpdateFloatingTexts(floatingTexts, dt);
@@ -455,6 +438,7 @@ int main()
             if (currentHealth <= 0) {
                 game.playState = GAMEOVER;
             }
+            
             switch (game.playState)
             {
             case BEGINNEW:
@@ -501,15 +485,18 @@ int main()
                 bullets.clear();
                 enemies.clear();
                 turrets.clear();
-                //PLAY SOUND WOULD BE COOL
+                //PLAY SOUND
                 audioManager.PlayMusic("gameOver");
                 game.gameState = CREDITS;
+                game.playState = BEGINNEW;
                 break;
             }
             break;
-        case CREDITS:
-            
+        case CREDITS:           
             UpdateBegin(playAgain, game);
+            //reset evewrything
+            currentHealth = maxHealth;
+            currentLevel = 1;
             break;
         }
        
@@ -584,10 +571,15 @@ int main()
 
             //this will draw the in game playstates button
             DrawHealthBar(currentHealth, maxHealth);
+            //draw in game tool bar
+            for (ToolbarButton& button : TurretButtons) {
+
+                DrawToolBar(button);
+            }
             switch (game.playState)
             {
             case BEGINNEW:
-                //updates button for colour hover thing
+                //Draws button for colour hover thing
                 DrawBegin(game);
                 break;
 
