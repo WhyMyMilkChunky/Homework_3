@@ -382,29 +382,30 @@ int main()
             if (pencil.tileType < SWITCH) {
                 if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
                     if (IsCellValid(SelectCell()))
-                        ChangeTile(SelectCell(), pencil.tileType, tiles);              
-
-            UpdateBegin(toolbarButtons,pencil);
-            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-                Cell selectedCell = SelectCell();
-
-                // Check if we can place another turret
-                if (placedTurrets < maxTurrets && InBounds(selectedCell) && tiles[selectedCell.row][selectedCell.col] == GRASS) {
-                    // Place turret visually on the tile
-                    ChangeTile(selectedCell, TURRET, tiles);
-
-                    // Create and add the turret to the list
-                    Vector2 turretPosition = TileCenter(selectedCell);
-                    turrets.push_back(CreateTurret(turretPosition));
-
-                    // Increment the number of placed turrets
-                    placedTurrets++;
-                }
-                else if (placedTurrets >= maxTurrets) {
-                    // Optionally, show feedback that the player can't place more turrets (e.g., flashing a message)
-                    std::cout << "Turret limit reached!" << std::endl;
-                }
+                        ChangeTile(SelectCell(), pencil.tileType, tiles);
             }
+
+                //idk what this is but i took out placing turrets in map maker
+           // if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+           //     Cell selectedCell = SelectCell();
+           //
+           //     // Check if we can place another turret
+           //     if (placedTurrets < maxTurrets && InBounds(selectedCell) && tiles[selectedCell.row][selectedCell.col] == GRASS) {
+           //         // Place turret visually on the tile
+           //         ChangeTile(selectedCell, TURRET, tiles);
+           //
+           //         // Create and add the turret to the list
+           //         Vector2 turretPosition = TileCenter(selectedCell);
+           //         turrets.push_back(CreateTurret(turretPosition));
+           //
+           //         // Increment the number of placed turrets
+           //         placedTurrets++;
+           //     }
+           //     else if (placedTurrets >= maxTurrets) {
+           //         // Optionally, show feedback that the player can't place more turrets (e.g., flashing a message)
+           //         std::cout << "Turret limit reached!" << std::endl;
+           //     }
+           // }
             break;
         case PLAYGAME:
 
