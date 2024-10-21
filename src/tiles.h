@@ -15,9 +15,10 @@ enum TileType : int
     WAYPOINT,
     TURRET,
     START,
+    PUMPKIN,
+    LOG,
     ROCK,
-    TREE,
-    //can add 2 more decor items
+    PLANT,
     SWITCH,
     COUNT
     

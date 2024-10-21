@@ -2,18 +2,24 @@
 #include "raylib.h"
 #include "Math.h"
 #include <vector>
+#include "MapMaker.h"
 
 struct TileInfo {
     Rectangle source;
     TileType type;
+    Toolbar setType;
 };
 
 TileInfo tileInfo[COUNT] = {
-    { { 0, 0, 16, 16 }, GRASS },
-    { { 16, 0, 16, 16 }, DIRT },
-    { { 16, 16, 16, 16 }, WAYPOINT },
-    { { 0, 16, 16, 16}, TURRET },
-    {{16, 16, 16, 16},START}
+    { { 0, 0, 16, 16 }, GRASS, BASICTILES },
+    { { 16, 0, 16, 16 }, DIRT ,BASICTILES},
+    { { 16, 0, 16, 16 }, WAYPOINT,BASICTILES },
+    { { 0, 16, 16, 16}, TURRET ,BASICTILES},
+    { {16, 16, 16, 16},START,BASICTILES},
+    { {32, 0, 16, 16 },PUMPKIN,DECORTILES },
+    { {48, 0, 16, 16 },LOG,DECORTILES},
+    { {32, 16, 16, 16 },ROCK,DECORTILES},
+    { {48, 16, 16, 16}, PLANT,DECORTILES}
 };
 
 //tile by specifying the tile type

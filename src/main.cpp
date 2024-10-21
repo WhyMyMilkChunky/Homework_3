@@ -47,8 +47,6 @@ void UnloadWeatherTextures() {
     UnloadTexture(winterTileTex);
 }
 
-
-
 AudioManager audioManager;
 std::vector<std::pair<std::string, std::string>> musicFiles = {
     {"playMusic", "Assets/Audio/music1.mp3"},
@@ -231,7 +229,6 @@ bool atEnd = false;
 void InitalizeGameStuff(std::vector<Turret>& turrets, int tiles[TILE_COUNT][TILE_COUNT]) {
      spawnInterval = 1.0f;
      spawnTimer = 0.0f;
-     currentLevel;
 
      turrets.clear();
    
@@ -318,8 +315,10 @@ int main()
     CreateToolbarButton(TOOLBAR_BUTTON_WIDTH*4,SWITCH, "--->",toolbarButtons);
 
     CreateToolbarButton(0,SWITCH, "<---", toolbarDecorButtons);
-    CreateToolbarButton(TOOLBAR_BUTTON_WIDTH, ROCK, "Rock", toolbarDecorButtons);
-    CreateToolbarButton(TOOLBAR_BUTTON_WIDTH*2, TREE, "Tree", toolbarDecorButtons);
+    CreateToolbarButton(TOOLBAR_BUTTON_WIDTH, PUMPKIN, "Pumpkin", toolbarDecorButtons);
+    CreateToolbarButton(TOOLBAR_BUTTON_WIDTH*2, PLANT, "Plant", toolbarDecorButtons);
+    CreateToolbarButton(TOOLBAR_BUTTON_WIDTH*3, ROCK, "Rock", toolbarDecorButtons);
+    CreateToolbarButton(TOOLBAR_BUTTON_WIDTH*4, LOG, "Log", toolbarDecorButtons);
 
    
     float shootCurrent = 0.0f;
@@ -384,28 +383,6 @@ int main()
                     if (IsCellValid(SelectCell()))
                         ChangeTile(SelectCell(), pencil.tileType, tiles);
             }
-
-                //idk what this is but i took out placing turrets in map maker
-           // if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-           //     Cell selectedCell = SelectCell();
-           //
-           //     // Check if we can place another turret
-           //     if (placedTurrets < maxTurrets && InBounds(selectedCell) && tiles[selectedCell.row][selectedCell.col] == GRASS) {
-           //         // Place turret visually on the tile
-           //         ChangeTile(selectedCell, TURRET, tiles);
-           //
-           //         // Create and add the turret to the list
-           //         Vector2 turretPosition = TileCenter(selectedCell);
-           //         turrets.push_back(CreateTurret(turretPosition));
-           //
-           //         // Increment the number of placed turrets
-           //         placedTurrets++;
-           //     }
-           //     else if (placedTurrets >= maxTurrets) {
-           //         // Optionally, show feedback that the player can't place more turrets (e.g., flashing a message)
-           //         std::cout << "Turret limit reached!" << std::endl;
-           //     }
-           // }
             break;
         case PLAYGAME:
 
@@ -493,9 +470,11 @@ int main()
                 break;
             }
             break;
-        case CREDITS:
-            
+        case CREDITS:           
             UpdateBegin(playAgain, game);
+            //reset evewrything
+            currentHealth = maxHealth;
+            currentLevel = 1;
             break;
         }
        
