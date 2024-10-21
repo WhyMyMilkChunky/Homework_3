@@ -7,19 +7,19 @@
 struct TileInfo {
     Rectangle source;
     TileType type;
-    Toolbar setType;
 };
 
 TileInfo tileInfo[COUNT] = {
-    { { 0, 0, 16, 16 }, GRASS, BASICTILES },
-    { { 16, 0, 16, 16 }, DIRT ,BASICTILES},
-    { { 16, 0, 16, 16 }, WAYPOINT,BASICTILES },
-    { { 0, 16, 16, 16}, TURRET ,BASICTILES},
-    { {16, 16, 16, 16},START,BASICTILES},
-    { {32, 0, 16, 16 },PUMPKIN,DECORTILES },
-    { {48, 0, 16, 16 },LOG,DECORTILES},
-    { {32, 16, 16, 16 },ROCK,DECORTILES},
-    { {48, 16, 16, 16}, PLANT,DECORTILES}
+    { { 0, 0, 16, 16 }, GRASS},
+    { { 16, 0, 16, 16 }, DIRT},
+    { { 16, 0, 16, 16 }, WAYPOINT },
+    { { 0, 16, 16, 16}, TURRET},
+    { {16, 16, 16, 16},START},
+    { {32, 0, 16, 16 },PUMPKIN },
+    { {48, 0, 16, 16 },LOG},
+    { {32, 16, 16, 16 },ROCK},
+    { {48, 16, 16, 16}, PLANT},
+    { {64, 16, 16, 16}, SPIKE}
 };
 
 //tile by specifying the tile type
