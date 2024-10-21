@@ -161,6 +161,7 @@ std::vector<Cell> FloodFill(Cell start, int tiles[TILE_COUNT][TILE_COUNT], TileT
         {
             // We don't want to search zero-tiles, so add them to closed!
             closed[row][col] = tiles[row][col] == 0;
+            closed[row][col] = tiles[row][col] >2;
         }
     }
 
