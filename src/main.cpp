@@ -219,7 +219,7 @@ MapManager mapManager(TILE_COUNT);
 
 float spawnInterval = 1.0f;
 float spawnTimer = 0.0f;
-
+int availableTurrets;
 // Automatic approach:
 std::vector<Cell> waypoints; 
 int curr = 0;
@@ -234,9 +234,7 @@ void InitalizeGameStuff(std::vector<Turret>& turrets, int tiles[TILE_COUNT][TILE
      currentLevel;
 
      turrets.clear();
-    
-
-    // Automatic approach:
+   
      waypoints = FloodFill(StartCell(tiles), tiles, WAYPOINT);
     curr = 0;
     next= curr + 1;
@@ -326,6 +324,11 @@ int main()
    
     float shootCurrent = 0.0f;
     float shootTotal = 0.25f;
+
+    int maxTurrets = 4;
+    int placedTurrets = 0;
+    
+
     InitalizeGameStuff(turrets, tiles);
     InitWindow(SCREEN_SIZEX, SCREEN_SIZEY, "Game");
     Texture2D tileTex = LoadTexture("Assets/Textures/tilemap1.png");
@@ -380,6 +383,27 @@ int main()
                 if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
                     if (IsCellValid(SelectCell()))
                         ChangeTile(SelectCell(), pencil.tileType, tiles);              
+
+            UpdateBegin(toolbarButtons,pencil);
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+                Cell selectedCell = SelectCell();
+
+                // Check if we can place another turret
+                if (placedTurrets < maxTurrets && InBounds(selectedCell) && tiles[selectedCell.row][selectedCell.col] == GRASS) {
+                    // Place turret visually on the tile
+                    ChangeTile(selectedCell, TURRET, tiles);
+
+                    // Create and add the turret to the list
+                    Vector2 turretPosition = TileCenter(selectedCell);
+                    turrets.push_back(CreateTurret(turretPosition));
+
+                    // Increment the number of placed turrets
+                    placedTurrets++;
+                }
+                else if (placedTurrets >= maxTurrets) {
+                    // Optionally, show feedback that the player can't place more turrets (e.g., flashing a message)
+                    std::cout << "Turret limit reached!" << std::endl;
+                }
             }
             break;
         case PLAYGAME:
@@ -390,10 +414,18 @@ int main()
 
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
                 Cell selectedCell = SelectCell();
-                if (InBounds(selectedCell) && tiles[selectedCell.row][selectedCell.col] == GRASS) { // Ensure it's a valid place
-                    ChangeTile(selectedCell, TURRET, tiles); // Place turret visually on tile
+
+                
+                if (placedTurrets < maxTurrets && InBounds(selectedCell) && tiles[selectedCell.row][selectedCell.col] == GRASS) {
+                    ChangeTile(selectedCell, TURRET, tiles);
+
                     Vector2 turretPosition = TileCenter(selectedCell);
-                    turrets.push_back(CreateTurret(turretPosition)); // Create and add a turret at that position
+                    turrets.push_back(CreateTurret(turretPosition));
+
+                    placedTurrets++;
+                }
+                else if (placedTurrets >= maxTurrets) {
+                    std::cout << "Turret limit reached!" << std::endl;
                 }
             }
 
@@ -402,6 +434,7 @@ int main()
             UpdateEnemies(enemies, waypoints, dt);
             UpdateTurrets(turrets, bullets, enemies, dt, audioManager);
             UpdateBullets(bullets, enemies, dt);
+
             particleSys.Update(dt);
             //death switch state
             if (currentHealth <= 0) {
@@ -434,6 +467,8 @@ int main()
                     game.playState = BEGINNEW;
                     totalEnemiesSpawned = 0;
                     maxEnemiesPerLevel += 10;
+                    maxTurrets += 2;
+                    placedTurrets = 0;
                 }
                 //spawns
                 if (totalEnemiesSpawned < maxEnemiesPerLevel && spawnTimer >= spawnInterval) {
@@ -443,6 +478,7 @@ int main()
                     spawnTimer = 0.0f;
                     totalEnemiesSpawned++;
                 }
+
                 break;
 
             case GAMEOVER:
@@ -490,7 +526,7 @@ int main()
             DrawText(levelText.c_str(), 10, 10, 20, BLACK);
                     break;
         case PLAYGAME :
-
+            availableTurrets = maxTurrets - placedTurrets;
             //Make snow
             if (currentWeather == WeatherType::WINTER) {
                 particleSys.CreateSnow(5, Random(1.0f, 5.0f), 2.0f, 50.0f, 90.0f, WHITE, 1.0f, GetScreenWidth(), GetScreenHeight());
@@ -523,6 +559,8 @@ int main()
             DrawTurrets(turrets, turretTex);
             //add particles to turrets
             particleSys.Draw();
+            
+            DrawText(("Turrets Left: " + std::to_string(availableTurrets)).c_str(), 10, 40, 20, BLACK);
             //this will draw the in game playstates button
             DrawHealthBar(currentHealth, maxHealth);
             switch (game.playState)
