@@ -418,6 +418,7 @@ int main()
             if (currentHealth <= 0) {
                 game.playState = GAMEOVER;
             }
+            
             switch (game.playState)
             {
             case BEGINNEW:
@@ -464,9 +465,10 @@ int main()
                 bullets.clear();
                 enemies.clear();
                 turrets.clear();
-                //PLAY SOUND WOULD BE COOL
+                //PLAY SOUND
                 audioManager.PlayMusic("gameOver");
                 game.gameState = CREDITS;
+                game.playState = BEGINNEW;
                 break;
             }
             break;
