@@ -34,8 +34,8 @@ struct Game {
 //Change button size and pos here
 constexpr int BUTTON_POSX = 0;
 constexpr int BUTTON_POSY = 800;
-constexpr int BUTTON_WIDTH = 300;
-constexpr int BUTTON_HEIGHT = 200;
+constexpr int BUTTON_WIDTH = 200;
+constexpr int BUTTON_HEIGHT = 100;
 constexpr const char* BUTTON_TEXT_START = "Start Game";
 constexpr const char* BUTTON_TEXT_NEXT = "Next Round";
 constexpr const char* BUTTON_TEXT_NEW = "New Game";

@@ -31,6 +31,7 @@ extern ParticleSystem particleSys;
 extern Button playAgain;
 constexpr std::array<Cell, 4> DIRECTIONS{ Cell{ -1, 0 }, Cell{ 1, 0 }, Cell{ 0, -1 }, Cell{ 0, 1 } };
 Pen pencil = { GRASS };
+Pen inGamePencil = { TURRET };
 Toolbar toolbar = BASICTILES;
 
 
@@ -296,6 +297,7 @@ int main()
     std::vector<Turret> turrets;
     std::vector<ToolbarButton> toolbarButtons;
     std::vector<ToolbarButton> toolbarDecorButtons;
+    std::vector<ToolbarButton> TurretButtons;
     std::vector<Button> Buttons;
     const std::array<EnemyType, 5> enemyTypes = {
     EnemyType::BASIC,
@@ -319,6 +321,10 @@ int main()
     CreateToolbarButton(TOOLBAR_BUTTON_WIDTH*2, PLANT, "Plant", toolbarDecorButtons);
     CreateToolbarButton(TOOLBAR_BUTTON_WIDTH*3, ROCK, "Rock", toolbarDecorButtons);
     CreateToolbarButton(TOOLBAR_BUTTON_WIDTH*4, LOG, "Log", toolbarDecorButtons);
+
+    CreateToolbarButton(BUTTON_WIDTH, TURRET, "Turret", TurretButtons);
+    CreateToolbarButton(BUTTON_WIDTH*2-40, SPIKE, "Spikes", TurretButtons);
+    CreateToolbarButton(BUTTON_WIDTH*3-80, SPIKE, "Spikes", TurretButtons);
 
    
     float shootCurrent = 0.0f;
@@ -387,9 +393,9 @@ int main()
         case PLAYGAME:
 
             UpdateBegin(game);
-            
+         
+            //place turrets
             Vector2 mouse = GetMousePosition();
-
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
                 Cell selectedCell = SelectCell();
 
@@ -406,8 +412,6 @@ int main()
                     std::cout << "Turret limit reached!" << std::endl;
                 }
             }
-
-            //particleSys.CreateSnow(1, 10.0f, 1.0f, 50.0f, 10.0f, WHITE, 1.0f, GetScreenWidth(), GetScreenHeight());
             //update all enemies
             UpdateEnemies(enemies, waypoints, dt);
             UpdateTurrets(turrets, bullets, enemies, dt, audioManager);
@@ -545,10 +549,15 @@ int main()
             DrawText(("Turrets Left: " + std::to_string(availableTurrets)).c_str(), 10, 40, 20, BLACK);
             //this will draw the in game playstates button
             DrawHealthBar(currentHealth, maxHealth);
+            //draw in game tool bar
+            for (ToolbarButton& button : TurretButtons) {
+
+                DrawToolBar(button);
+            }
             switch (game.playState)
             {
             case BEGINNEW:
-                //updates button for colour hover thing
+                //Draws button for colour hover thing
                 DrawBegin(game);
                 break;
 

@@ -19,6 +19,7 @@ enum TileType : int
     LOG,
     ROCK,
     PLANT,
+    SPIKE,
     SWITCH,
     COUNT
     
