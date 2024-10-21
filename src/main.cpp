@@ -294,6 +294,7 @@ void InitalizeGameStuff(std::vector<Turret>& turrets, int tiles[TILE_COUNT][TILE
         std::cout << "Failed to load map." << std::endl;
     }
 };
+
 int main()
 {    
    // currentLevel = LoadCurrentLevel();
@@ -604,6 +605,7 @@ int main()
             break;
         case CREDITS:
             DrawGameOver();
+            DrawText(pointsText.c_str(), SCREEN_SIZEX / 2 - MeasureText(pointsText.c_str(), 50) / 2, SCREEN_SIZEY / 2 - 25, 50, RED);
             break;
         }
         EndDrawing();
