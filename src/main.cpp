@@ -84,6 +84,7 @@ std::vector<FloatingText> floatingTexts;
 //stats
 int currentHealth = 100;
 int maxHealth = 100;
+int maxTurrets;
 
 int playerPoints = 0;
 std::string pointsText = "Points: " + std::to_string(playerPoints);
@@ -144,7 +145,15 @@ Cell StartCell(int tiles[TILE_COUNT][TILE_COUNT]) {
     }
 }
 bool isNextLevel() {
-    return true;
+    if (currentLevel > 7)
+        return false;
+
+    else 
+    {
+        maxTurrets -= 12;
+        return true;
+    }
+    
 }
 // Returns a collection of adjacent cells that match the search value.
 std::vector<Cell> FloodFill(Cell start, int tiles[TILE_COUNT][TILE_COUNT], TileType searchValue)
@@ -160,6 +169,7 @@ std::vector<Cell> FloodFill(Cell start, int tiles[TILE_COUNT][TILE_COUNT], TileT
         {
             // We don't want to search zero-tiles, so add them to closed!
             closed[row][col] = tiles[row][col] == 0;
+            closed[row][col] = tiles[row][col] >2;
         }
     }
 
@@ -282,6 +292,7 @@ void InitalizeGameStuff(std::vector<Turret>& turrets, int tiles[TILE_COUNT][TILE
         std::cout << "Failed to load map." << std::endl;
     }
 };
+
 int main()
 {    
    // currentLevel = LoadCurrentLevel();
@@ -344,7 +355,7 @@ int main()
     float shootCurrent = 0.0f;
     float shootTotal = 0.25f;
 
-    int maxTurrets = 4;
+    int maxTurrets = 3;
     int placedTurrets = 0;
     
     turrets.clear();
@@ -584,7 +595,7 @@ int main()
             pointsText = "Points: " + std::to_string(playerPoints);
             
             DrawText(("Turrets Left: " + std::to_string(availableTurrets)).c_str(), 10, 40, 20, BLACK);
-            DrawText(pointsText.c_str(), GetScreenWidth() - 200, 40, 20, BLACK);
+            DrawText(pointsText.c_str(), GetScreenWidth() - 150, 40, 20, BLACK);
             DrawFloatingTexts(floatingTexts);
 
 
@@ -613,6 +624,7 @@ int main()
             break;
         case CREDITS:
             DrawGameOver();
+            DrawText(pointsText.c_str(), SCREEN_SIZEX / 2 - MeasureText(pointsText.c_str(), 50) / 2, SCREEN_SIZEY / 2 - 25, 50, RED);
             break;
         }
         EndDrawing();
