@@ -5,6 +5,8 @@
 #include "ParticleSystem.h"
 #include "MainMenuUI.h"
 #include "AudioManager.h"
+#include "tiles.h"
+#include "enemies.h"
 
 ParticleSystem particleSys;
 Turret CreateTurret(Vector2 position) {
@@ -68,4 +70,35 @@ Enemy* FindNearestEnemy(Turret& turret, std::vector<Enemy>& enemies) {
     return nearestEnemy;
 }
 
+void CreateSpike(Cell cell,std::vector<Spikes>& spikes) {
+    Rectangle cellOfSpike = {cell.col*TILE_SIZE,cell.row*TILE_SIZE,TILE_SIZE,TILE_SIZE};
+    Spikes newSpike;
+    newSpike.cell = cell;
+    newSpike.rec = cellOfSpike;
+   
+   spikes.push_back(newSpike);
+}
+void UpdateSpikes(std::vector<Enemy>& enemies, std::vector<Spikes>& spikes, int tiles[TILE_COUNT][TILE_COUNT]){
+    for (Spikes& spike : spikes) {
+        for (Enemy& enemy : enemies) {
+            if (CheckCollisionCircleRec(enemy.position, ENEMY_RADIUS, spike.rec)) {
+                //deal damage
+                enemy.health = enemy.health - spike.damage;
+                spike.health = 0;
+                tiles[spike.cell.row][spike.cell.col] = DIRT;
+
+                //delete spike
+
+            }
+
+        }
+    }
+    spikes.erase(
+        std::remove_if(spikes.begin(), spikes.end(), [](const Spikes& spike) {
+
+            return (spike.health == 0);
+            }),
+        spikes.end());
+    
+}
 

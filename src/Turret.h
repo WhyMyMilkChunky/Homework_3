@@ -3,6 +3,7 @@
 #include <vector>
 #include "enemies.h"
 #include "AudioManager.h"
+#include "tiles.h"
 
 
 struct Turret {
@@ -14,10 +15,10 @@ struct Turret {
     float rotationAngle;
 };
 struct Spikes {
-    Vector2 pos;
-    float damage;
- //how many enemys can get hit by it, like 3 or something
-    int health;
+    Cell cell;
+    Rectangle rec;
+    float damage = 20;
+    int health = 1;
 };
 struct Bullet
 {
@@ -35,4 +36,6 @@ void DrawTurrets(std::vector<Turret>& turrets, Texture2D turretTexture);
 void UpdateTurrets(std::vector<Turret>& turrets, std::vector<Bullet>& bullets, std::vector<Enemy>& enemies, float dt, AudioManager& audioManager);
 
 Enemy* FindNearestEnemy(Turret& turret, std::vector<Enemy>& enemies);
+void CreateSpike(Cell cell, std::vector<Spikes>& spikes);
+void UpdateSpikes(std::vector<Enemy>& enemies, std::vector<Spikes>& spikes,int tiles[TILE_COUNT][TILE_COUNT]);
 

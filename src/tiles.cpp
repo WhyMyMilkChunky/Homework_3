@@ -19,7 +19,7 @@ TileInfo tileInfo[COUNT] = {
     { {48, 0, 16, 16 },LOG},
     { {32, 16, 16, 16 },ROCK},
     { {48, 16, 16, 16}, PLANT},
-    { {64, 16, 16, 16}, SPIKE}
+    { {64, 0, 16, 16}, SPIKE}
 };
 
 //tile by specifying the tile type

@@ -4,9 +4,6 @@
 #include <vector>
 #include "tiles.h"
 
-constexpr float ENEMY_RADIUS = 25.0f;
-constexpr int DAMAGE_PER_ENEMY = 10;
-
 extern int currentHealth;
 extern int playerPoints;
 

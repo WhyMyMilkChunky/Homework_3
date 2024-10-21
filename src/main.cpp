@@ -21,7 +21,6 @@
 
 //long main scripts give me anxiety so i refractored some of the code to different places
 constexpr float BULLET_RADIUS = 6.0f;
-constexpr float ENEMY_RADIUS = 25.0f;
 constexpr float BULLET_SPEED = 600.0f;
 
 extern Rectangle playButton;
@@ -246,7 +245,6 @@ void InitalizeGameStuff(std::vector<Turret>& turrets, int tiles[TILE_COUNT][TILE
      spawnInterval = 1.0f;
      spawnTimer = 0.0f;
 
-     turrets.clear();
    
      waypoints = FloodFill(StartCell(tiles), tiles, WAYPOINT);
      curr = 0;
@@ -310,6 +308,7 @@ int main()
     std::vector<Enemy> enemies;
     std::vector<Bullet> bullets;
     std::vector<Turret> turrets;
+    std::vector<Spikes> spikes;
     std::vector<ToolbarButton> toolbarButtons;
     std::vector<ToolbarButton> toolbarDecorButtons;
     std::vector<ToolbarButton> TurretButtons;
@@ -339,7 +338,7 @@ int main()
 
     CreateToolbarButton(BUTTON_WIDTH, TURRET, "Turret", TurretButtons);
     CreateToolbarButton(BUTTON_WIDTH*2-40, SPIKE, "Spikes", TurretButtons);
-    CreateToolbarButton(BUTTON_WIDTH*3-80, SPIKE, "Spikes", TurretButtons);
+    //CreateToolbarButton(BUTTON_WIDTH*3-80, SPIKE, "Spikes", TurretButtons);
 
    
     float shootCurrent = 0.0f;
@@ -348,7 +347,8 @@ int main()
     int maxTurrets = 4;
     int placedTurrets = 0;
     
-
+    turrets.clear();
+    spikes.clear();
     InitalizeGameStuff(turrets, tiles);
     InitWindow(SCREEN_SIZEX, SCREEN_SIZEY, "Game");
     Texture2D tileTex = LoadTexture("Assets/Textures/tilemap1.png");
@@ -407,28 +407,44 @@ int main()
         case PLAYGAME:
 
             UpdateBegin(game);
-         
+            UpdateBegin(TurretButtons, inGamePencil, toolbar);
             //place turrets
             Vector2 mouse = GetMousePosition();
+            
+
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
                 Cell selectedCell = SelectCell();
 
-                
-                if (placedTurrets < maxTurrets && InBounds(selectedCell) && tiles[selectedCell.row][selectedCell.col] == GRASS) {
-                    ChangeTile(selectedCell, TURRET, tiles);
+                if (inGamePencil.tileType == TURRET) {
+                    if (placedTurrets < maxTurrets && InBounds(selectedCell) && tiles[selectedCell.row][selectedCell.col] == GRASS) {
+                        ChangeTile(selectedCell, inGamePencil.tileType, tiles);
 
-                    Vector2 turretPosition = TileCenter(selectedCell);
-                    turrets.push_back(CreateTurret(turretPosition));
+                        Vector2 turretPosition = TileCenter(selectedCell);
+                        turrets.push_back(CreateTurret(turretPosition));
 
-                    placedTurrets++;
+                        placedTurrets++;
+                    }
+                    else if (placedTurrets >= maxTurrets) {
+                        std::cout << "Turret limit reached!" << std::endl;
+                    }
                 }
-                else if (placedTurrets >= maxTurrets) {
-                    std::cout << "Turret limit reached!" << std::endl;
+                else {
+                    //placing spikes on path
+                    Cell selectedCell= SelectCell();
+                    if (tiles[selectedCell.row][selectedCell.col] == DIRT)
+                    ChangeTile(selectedCell, inGamePencil.tileType, tiles);
+
+                    CreateSpike(selectedCell, spikes);
+
                 }
+
+
             }
             //update all enemies
             UpdateEnemies(enemies, waypoints, dt, floatingTexts);
             UpdateFloatingTexts(floatingTexts, dt);
+            
+                UpdateSpikes(enemies, spikes,tiles);
 
             UpdateTurrets(turrets, bullets, enemies, dt, audioManager);
             UpdateBullets(bullets, enemies, dt);
@@ -459,9 +475,10 @@ int main()
                     if (isNextLevel())
                         currentLevel++;
                     else
-                        currentLevel = 0;
+                        currentLevel = 1;
                         mapManager.LoadMap(currentLevel, tiles);
-
+                        turrets.clear();
+                        spikes.clear();
                     InitalizeGameStuff(turrets, tiles);
                     game.playState = BEGINNEW;
                     totalEnemiesSpawned = 0;
@@ -485,6 +502,8 @@ int main()
                 bullets.clear();
                 enemies.clear();
                 turrets.clear();
+                spikes.clear();
+
                 //PLAY SOUND
                 audioManager.PlayMusic("gameOver");
                 game.gameState = CREDITS;
@@ -576,6 +595,7 @@ int main()
 
                 DrawToolBar(button);
             }
+
             switch (game.playState)
             {
             case BEGINNEW:
@@ -584,7 +604,6 @@ int main()
                 break;
 
             case PLAY:
-
                 break;
 
             case GAMEOVER:

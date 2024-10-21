@@ -2,7 +2,8 @@
 #include "raylib.h"
 #include <vector>
 #include <string>
-
+constexpr float ENEMY_RADIUS = 25.0f;
+constexpr int DAMAGE_PER_ENEMY = 10;
 struct Cell;
 
 enum class EnemyType {
