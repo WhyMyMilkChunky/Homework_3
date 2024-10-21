@@ -33,3 +33,10 @@ Vector2 TileCenter(Cell cell) {
     pixel = pixel + TILE_SIZE * 0.5f;   // Center
     return pixel;
 }
+
+bool IsCellValid(Cell selectedCell) {
+    if (selectedCell.row <= TILE_COUNT && selectedCell.col <= TILE_COUNT)
+        return true;
+    else
+    return true;
+}

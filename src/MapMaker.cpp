@@ -15,16 +15,13 @@ void CreateToolbarButton(float yOffset,TileType tileType,const char* buttonText,
 }
 void DrawToolBar(ToolbarButton button)
 {
-    //for every button in toolbarbuttons, draw that
-    
+    //draw button rectangle
     DrawRectangleRec(button.rec, button.buttonColour);
+    //center text
     int textX = button.rec.x + (TOOLBAR_BUTTON_WIDTH / 2) - (MeasureText(button.buttonText, 30)) / 2;
     int textY = button.rec.y+ (TOOLBAR_BUTTON_HEIGHT/2 - 15);
 
     DrawText(button.buttonText, textX, textY, 30, RAYWHITE);
-    //technically not always grass, maybe change to feild or something
-   // DrawRectangleRec(Grass.rec, Grass.buttonColour);
-   // DrawRectangleRec(Dirt.rec, Dirt.buttonColour);
 }
 
 void DrawBackground(int tiles[TILE_COUNT][TILE_COUNT], Texture2D tileTex)

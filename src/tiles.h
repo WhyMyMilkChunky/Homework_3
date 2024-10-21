@@ -15,6 +15,10 @@ enum TileType : int
     WAYPOINT,
     TURRET,
     START,
+    ROCK,
+    TREE,
+    //can add 2 more decor items
+    SWITCH,
     COUNT
     
 };
@@ -23,7 +27,7 @@ struct Cell {
     int row;
     int col;
 };
-
+bool IsCellValid(Cell selectedCell);
 Vector2 TileCenter(Cell cell);
 
 

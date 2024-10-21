@@ -44,7 +44,7 @@ void UpdateBegin(Game& game) {
     game.playButtonColour = mouseOver ? buttonColorIn : buttonColorOut;
 
 }
-void UpdateBegin(std::vector<ToolbarButton>& buttons,Pen& pencil)
+void UpdateBegin(std::vector<ToolbarButton>& buttons,Pen& pencil, Toolbar& toolbar)
 {
     for (ToolbarButton& button : buttons) {
         // Add mouse-out vs mouse-over colour
@@ -55,15 +55,22 @@ void UpdateBegin(std::vector<ToolbarButton>& buttons,Pen& pencil)
         bool mouseOver = CheckCollisionPointRec(GetMousePosition(), button.rec);
         button.buttonColour = mouseOver ? buttonColorIn : buttonColorOut;
 
-        //if has been selected, make button look selected;
-        if (pencil.tileType == button.tileType)
+        //if has been selected and its not the <-- button, make button look selected;
+        if (pencil.tileType == button.tileType && pencil.tileType != SWITCH)
             button.buttonColour = buttonColorSelected;
 
         //if selected change pencil to type
-        if (mouseOver && IsMouseButtonReleased(MOUSE_LEFT_BUTTON))
+        if (mouseOver && IsMouseButtonReleased(MOUSE_LEFT_BUTTON)) {
             pencil.tileType = button.tileType;
+
+            if (pencil.tileType == SWITCH) {
+                toolbar = (toolbar == DECORTILES) ? BASICTILES : DECORTILES;
+            }
+        }
+
     }
 }
+
 //im realizing this is in an odd script as it should be in mainmenuui but like idk 
 //trying to send in buttons
 

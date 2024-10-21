@@ -5,6 +5,10 @@
 constexpr int TOOLBAR_BUTTON_WIDTH = 160;
 constexpr int TOOLBAR_BUTTON_HEIGHT = 100;
 constexpr Color TOOLBAR_COLOR = BROWN;
+enum Toolbar {
+	BASICTILES,
+	DECORTILES
+};
 //toolbar buttons
 struct ToolbarButton {
 	//current colour

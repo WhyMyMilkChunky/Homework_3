@@ -3,7 +3,6 @@
 #include <fstream>
 #include <string>
 
-
 MapManager::MapManager(int tileCount) : tileCount(tileCount) {}
 
 //generate le file name (game takes place in france)

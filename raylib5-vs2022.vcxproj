@@ -41,7 +41,6 @@
     <Image Include="Assets\Textures\Turret_Top.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="map.bin" />
     <None Include="map1.bin" />
     <None Include="map2.bin" />
   </ItemGroup>

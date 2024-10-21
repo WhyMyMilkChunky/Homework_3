@@ -31,6 +31,7 @@ extern ParticleSystem particleSys;
 extern Button playAgain;
 constexpr std::array<Cell, 4> DIRECTIONS{ Cell{ -1, 0 }, Cell{ 1, 0 }, Cell{ 0, -1 }, Cell{ 0, 1 } };
 Pen pencil = { GRASS };
+Toolbar toolbar = BASICTILES;
 
 
 
@@ -95,21 +96,21 @@ void SaveCurrentLevel(int currentLevel) {
         std::cerr << "Failed to open current_level.txt for writing" << std::endl;
     }
 }
-
-// Function to load the current level from a file
-int LoadCurrentLevel() {
-    std::ifstream file("current_level.txt");
-    int level = 1; // Default to level 1 if file doesn't exist
-    if (file.is_open()) {
-        file >> level;
-        file.close();
-        std::cout << "Loaded current level: " << level << std::endl;
-    }
-    else {
-        std::cerr << "Failed to open current_level.txt, defaulting to level 1" << std::endl;
-    }
-    return level;
-}
+//This doesnt seem to do anything
+//// Function to load the current level from a file
+//int LoadCurrentLevel() {
+//    std::ifstream file("current_level.txt");
+//    int level = 1; // Default to level 1 if file doesn't exist
+//    if (file.is_open()) {
+//        file >> level;
+//        file.close();
+//        std::cout << "Loaded current level: " << level << std::endl;
+//    }
+//    else {
+//        std::cerr << "Failed to open current_level.txt, defaulting to level 1" << std::endl;
+//    }
+//    return level;
+//}
 inline bool InBounds(Cell cell, int rows = TILE_COUNT, int cols = TILE_COUNT)
 {
     return cell.col >= 0 && cell.col < cols && cell.row >= 0 && cell.row < rows;
@@ -129,6 +130,9 @@ Cell StartCell(int tiles[TILE_COUNT][TILE_COUNT]) {
 
         }
     }
+}
+bool isNextLevel() {
+    return true;
 }
 // Returns a collection of adjacent cells that match the search value.
 std::vector<Cell> FloodFill(Cell start, int tiles[TILE_COUNT][TILE_COUNT], TileType searchValue)
@@ -263,15 +267,15 @@ void InitalizeGameStuff(std::vector<Turret>& turrets, int tiles[TILE_COUNT][TILE
     particleSys.Clear();
     if (mapManager.LoadMap(currentLevel, tiles)) {
         std::cout << "Map loaded successfully!" << std::endl;
+
     }
     else {
         std::cout << "Failed to load map." << std::endl;
     }
 };
 int main()
-{   
-    currentLevel = 1;
-    currentLevel = LoadCurrentLevel();
+{    
+   // currentLevel = LoadCurrentLevel();
     int tiles[TILE_COUNT][TILE_COUNT];
     if (mapManager.LoadMap(currentLevel, tiles)) {
         std::cout << "Map loaded successfully!" << std::endl;
@@ -296,6 +300,7 @@ int main()
     std::vector<Bullet> bullets;
     std::vector<Turret> turrets;
     std::vector<ToolbarButton> toolbarButtons;
+    std::vector<ToolbarButton> toolbarDecorButtons;
     std::vector<Button> Buttons;
     const std::array<EnemyType, 5> enemyTypes = {
     EnemyType::BASIC,
@@ -311,8 +316,13 @@ int main()
     CreateToolbarButton(0, GRASS, "Grass",toolbarButtons);
     CreateToolbarButton(TOOLBAR_BUTTON_WIDTH, DIRT, "Dirt",toolbarButtons);
     CreateToolbarButton(TOOLBAR_BUTTON_WIDTH*2, WAYPOINT, "Waypoint",toolbarButtons);
-    CreateToolbarButton(TOOLBAR_BUTTON_WIDTH*3, TURRET, "Turret",toolbarButtons);
-    CreateToolbarButton(TOOLBAR_BUTTON_WIDTH*4, START, "StartCell",toolbarButtons);
+    CreateToolbarButton(TOOLBAR_BUTTON_WIDTH*3, START, "StartCell",toolbarButtons);
+    CreateToolbarButton(TOOLBAR_BUTTON_WIDTH*4,SWITCH, "--->",toolbarButtons);
+
+    CreateToolbarButton(0,SWITCH, "<---", toolbarDecorButtons);
+    CreateToolbarButton(TOOLBAR_BUTTON_WIDTH, ROCK, "Rock", toolbarDecorButtons);
+    CreateToolbarButton(TOOLBAR_BUTTON_WIDTH*2, TREE, "Tree", toolbarDecorButtons);
+
    
     float shootCurrent = 0.0f;
     float shootTotal = 0.25f;
@@ -357,10 +367,20 @@ int main()
             }
             
             DrawText(levelText.c_str(), 10, 10, 20, BLACK);
-
-            UpdateBegin(toolbarButtons,pencil);
-            if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
-            ChangeTile(SelectCell(), pencil.tileType, tiles);
+            switch (toolbar) {
+            case BASICTILES:
+                UpdateBegin(toolbarButtons, pencil, toolbar);
+                break;
+            case DECORTILES:
+                UpdateBegin(toolbarDecorButtons, pencil, toolbar);
+                break;
+            }
+            //check if pencil is a tiletype and if the click was on the map
+            if (pencil.tileType < SWITCH) {
+                if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+                    if (IsCellValid(SelectCell()))
+                        ChangeTile(SelectCell(), pencil.tileType, tiles);              
+            }
             break;
         case PLAYGAME:
 
@@ -403,8 +423,13 @@ int main()
                 spawnTimer += dt;
                 if (totalEnemiesSpawned >= maxEnemiesPerLevel && enemies.empty()) {
                     bullets.clear();
-                    currentLevel++;
-                    mapManager.LoadMap(currentLevel, tiles);
+                    //check if there is a next level
+                    if (isNextLevel())
+                        currentLevel++;
+                    else
+                        currentLevel = 0;
+                        mapManager.LoadMap(currentLevel, tiles);
+
                     InitalizeGameStuff(turrets, tiles);
                     game.playState = BEGINNEW;
                     totalEnemiesSpawned = 0;
@@ -447,9 +472,20 @@ int main()
         case MAPMAKER:
             
             DrawBackground(tiles, summerTileTex);
-            for (ToolbarButton& button : toolbarButtons) {
+            switch (toolbar) {
+            case BASICTILES:
 
-                DrawToolBar(button);
+                for (ToolbarButton& button : toolbarButtons) {
+
+                    DrawToolBar(button);
+                }
+                break;
+            case DECORTILES:
+                for (ToolbarButton& button : toolbarDecorButtons) {
+
+                    DrawToolBar(button);
+                }
+                break;
             }
             DrawText(levelText.c_str(), 10, 10, 20, BLACK);
                     break;

@@ -46,7 +46,7 @@ void ChangeGamemode(PlayStates newPlayState,Game& game);
 void DrawBegin(Game& game);
 //updates buttons so they change while hovering
 void UpdateBegin(Button& button, Game& game);
-void UpdateBegin(std::vector<ToolbarButton>& button, Pen& pencil);
+void UpdateBegin(std::vector<ToolbarButton>& button, Pen& pencil,Toolbar& toolbar);
 void UpdateBegin(Game& game);
 
 //mainmenu

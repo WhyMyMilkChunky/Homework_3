@@ -3,6 +3,7 @@
 #include <cstring>
 #include "tiles.h"
 
+constexpr int TOTAL_MAPS = 5;
 enum class WeatherType {
     SUMMER,
     WINTER
