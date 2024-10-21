@@ -34,7 +34,7 @@ Pen pencil = { GRASS };
 Toolbar toolbar = BASICTILES;
 
 
-
+//weather
 WeatherType currentWeather = WeatherType::SUMMER;
 Texture2D summerTileTex;
 Texture2D winterTileTex;
@@ -48,7 +48,7 @@ void UnloadWeatherTextures() {
 }
 
 
-
+//audio
 AudioManager audioManager;
 std::vector<std::pair<std::string, std::string>> musicFiles = {
     {"playMusic", "Assets/Audio/music1.mp3"},
@@ -77,14 +77,26 @@ void LoadAllSounds(AudioManager& audioManager) {
     }
 }
 
+//ui
+std::vector<FloatingText> floatingTexts;
+
+
+//stats
 int currentHealth = 100;
 int maxHealth = 100;
+
+int playerPoints = 0;
+std::string pointsText = "Points: " + std::to_string(playerPoints);
+
 
 int currentLevel = 1;
 
 int totalEnemiesSpawned = 0;
 int maxEnemiesPerLevel = 10;
 
+
+
+//save
 void SaveCurrentLevel(int currentLevel) {
     std::ofstream file("current_level.txt");
     if (file.is_open()) {
@@ -220,6 +232,7 @@ MapManager mapManager(TILE_COUNT);
 float spawnInterval = 1.0f;
 float spawnTimer = 0.0f;
 int availableTurrets;
+
 // Automatic approach:
 std::vector<Cell> waypoints; 
 int curr = 0;
@@ -236,8 +249,8 @@ void InitalizeGameStuff(std::vector<Turret>& turrets, int tiles[TILE_COUNT][TILE
      turrets.clear();
    
      waypoints = FloodFill(StartCell(tiles), tiles, WAYPOINT);
-    curr = 0;
-    next= curr + 1;
+     curr = 0;
+     next= curr + 1;
      enemySpawnPosition = TileCenter(waypoints[curr]);
      enemySpeed = 69.0f;
      atEnd = false;
@@ -339,7 +352,6 @@ int main()
 
     while (!WindowShouldClose())
     {
-
         float dt = GetFrameTime();
         audioManager.Update({ SCREEN_SIZEX * 0.5 , SCREEN_SIZEY* 0.5 });
         std::string levelText = "Current Level: " + std::to_string(currentLevel);
@@ -432,7 +444,9 @@ int main()
 
             //particleSys.CreateSnow(1, 10.0f, 1.0f, 50.0f, 10.0f, WHITE, 1.0f, GetScreenWidth(), GetScreenHeight());
             //update all enemies
-            UpdateEnemies(enemies, waypoints, dt);
+            UpdateEnemies(enemies, waypoints, dt, floatingTexts);
+            UpdateFloatingTexts(floatingTexts, dt);
+
             UpdateTurrets(turrets, bullets, enemies, dt, audioManager);
             UpdateBullets(bullets, enemies, dt);
 
@@ -560,8 +574,14 @@ int main()
             DrawTurrets(turrets, turretTex);
             //add particles to turrets
             particleSys.Draw();
+
+            pointsText = "Points: " + std::to_string(playerPoints);
             
             DrawText(("Turrets Left: " + std::to_string(availableTurrets)).c_str(), 10, 40, 20, BLACK);
+            DrawText(pointsText.c_str(), GetScreenWidth() - 200, 40, 20, BLACK);
+            DrawFloatingTexts(floatingTexts);
+
+
             //this will draw the in game playstates button
             DrawHealthBar(currentHealth, maxHealth);
             switch (game.playState)

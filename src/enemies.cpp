@@ -8,6 +8,7 @@ constexpr float ENEMY_RADIUS = 25.0f;
 constexpr int DAMAGE_PER_ENEMY = 10;
 
 extern int currentHealth;
+extern int playerPoints;
 
 Enemy CreateEnemy(EnemyType type, Vector2 startPosition) {
     // Oh look, another function to create enemies. Exciting, right?
@@ -20,23 +21,28 @@ Enemy CreateEnemy(EnemyType type, Vector2 startPosition) {
     switch (type) {
     case EnemyType::BASIC:
         enemy.health = enemy.maxHealth = 100;
-        enemy.speed = 100.0f;
+        enemy.speed = 100;
+        enemy.pointWorth = 10;
         break;
     case EnemyType::WALLACE:
         enemy.health = enemy.maxHealth = 50;
-        enemy.speed = 150.0f;
+        enemy.speed = 150;
+        enemy.pointWorth = 1;
         break;
     case EnemyType::JOSS:
         enemy.health = enemy.maxHealth = 300;
         enemy.speed = 50.0f;
+        enemy.pointWorth = 50;
         break;
     case EnemyType::RUI:
         enemy.health = enemy.maxHealth = 20;
-        enemy.speed = 200.0f;
+        enemy.speed = 200;
+        enemy.pointWorth = 5;
         break;
     case EnemyType::CONNOR:
         enemy.health = enemy.maxHealth = 500;
-        enemy.speed = 75.0f;
+        enemy.speed = 75;
+        enemy.pointWorth = 69;
         break;
     }
 
@@ -44,18 +50,16 @@ Enemy CreateEnemy(EnemyType type, Vector2 startPosition) {
     return enemy;
 }
 
-void UpdateEnemies(std::vector<Enemy>& enemies, const std::vector<Cell>& waypoints, float dt) {
+void UpdateEnemies(std::vector<Enemy>& enemies, const std::vector<Cell>& waypoints, float dt, std::vector<FloatingText>& floatingTexts) {
     enemies.erase(
         std::remove_if(enemies.begin(), enemies.end(), [&](Enemy& enemy) {
             int curr = enemy.currentWaypoint;
 
-            // did the enemy finally make it?
             if (curr >= waypoints.size() - 1) {
                 currentHealth -= DAMAGE_PER_ENEMY;
-                return true;  // and poof, the enemy is gone
+                return true;
             }
 
-            //they really don't know when to quit.
             int next = curr + 1;
             Vector2 A = TileCenter(waypoints[curr]);
             Vector2 B = TileCenter(waypoints[next]);
@@ -66,9 +70,21 @@ void UpdateEnemies(std::vector<Enemy>& enemies, const std::vector<Cell>& waypoin
                 enemy.position = B;
                 enemy.currentWaypoint = next;
             }
+            if (enemy.health <= 0) {
+                playerPoints += enemy.pointWorth;
 
-            //one way ticket to oblivion.
-            return enemy.health <= 0;
+                // Add floating text at the enemy's position
+                FloatingText newText;
+                newText.pos = enemy.position;
+                newText.text = "+" + std::to_string(enemy.pointWorth);
+                newText.alpha = 1.0f;  // Fully visible
+                newText.lifetime = 1.0f;  // Lasts for 1 second
+                floatingTexts.push_back(newText);
+
+                return true;
+            }
+
+            return false;
             }),
         enemies.end()
     );
@@ -107,6 +123,21 @@ void DrawEnemies(const std::vector<Enemy>& enemies, Texture2D enemyTexture) {
         DrawEnemyHealthBar(enemy.position, enemy.health, enemy.maxHealth, ENEMY_RADIUS);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//UI
 
 void DrawEnemyHealthBar(Vector2 enemyPosition, int currentHealth, int maxHealth, float enemyRadius) {
     //makehealth bars proportional
@@ -148,4 +179,23 @@ void DrawEnemyHealthBar(Vector2 enemyPosition, int currentHealth, int maxHealth,
     //the part that shows you how much pain they’re in
     Rectangle innerRect = { (float)posX, (float)posY, (float)innerBarWidth, (float)HEALTH_BAR_HEIGHT };
     DrawRectangleRec(innerRect, healthColor);
+}
+void UpdateFloatingTexts(std::vector<FloatingText>& floatingTexts, float dt) {
+    for (auto& text : floatingTexts) {
+        text.pos.y -= 50.0f * dt;  // Move text upward
+        text.alpha -= 0.5f * dt;  // Reduce transparency
+        text.lifetime -= dt;  // Reduce lifeTime
+    }
+    // Remove text that's fully faded or expired
+    floatingTexts.erase(
+        std::remove_if(floatingTexts.begin(), floatingTexts.end(),
+            [](const FloatingText& text) { return text.alpha <= 0.0f || text.lifetime <= 0.0f; }),
+        floatingTexts.end());
+}
+
+void DrawFloatingTexts(const std::vector<FloatingText>& floatingTexts) {
+    for (const auto& text : floatingTexts) {
+        Color textColor = Fade(WHITE, text.alpha);
+        DrawText(text.text.c_str(), (int)text.pos.x, (int)text.pos.y, 20, textColor);
+    }
 }
