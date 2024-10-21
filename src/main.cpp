@@ -442,7 +442,7 @@ int main()
                 else {
                     //placing spikes on path
                     Cell selectedCell= SelectCell();
-                    if (tiles[selectedCell.row][selectedCell.col] == DIRT)
+                    if (tiles[selectedCell.row][selectedCell.col] == DIRT && InBounds(selectedCell))
                     ChangeTile(selectedCell, inGamePencil.tileType, tiles);
 
                     CreateSpike(selectedCell, spikes);
